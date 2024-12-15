@@ -24,6 +24,8 @@ dependencies = [
     "pydantic-settings",
     "passlib[bcrypt]",
     "psycopg2-binary",
+    "sqlalchemy[asyncio]",
+    "asyncpg",
 ]
 
 [project.optional-dependencies]

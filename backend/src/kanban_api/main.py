@@ -4,18 +4,17 @@ from kanban_api.database import engine, Base
 from kanban_api.models import *
 from kanban_api import __version__
 from kanban_api.config import settings
-from kanban_api.routes import user
+from kanban_api.routes import user, auth
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # before the app starts
 
-    #drop all tables
-    if settings.drop_all:
-        Base.metadata.drop_all(bind=engine)
-    #create all tables
-    Base.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        if settings.drop_all:
+            await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
     yield
     # after the app shuts down
 
@@ -33,6 +32,8 @@ async def root() -> dict[str, str]:
 
 
 app.include_router(user.router)
+app.include_router(auth.router)
+
 if __name__ == "__main__":
     import uvicorn
 
