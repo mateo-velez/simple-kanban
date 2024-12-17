@@ -9,6 +9,7 @@ class BaseSchema(BaseModel):
         populate_by_name=True,
         alias_generator=to_camel,
         frozen=True,
+        by_alias=True,
         validate_default=True,
         str_max_length=4096,
     )

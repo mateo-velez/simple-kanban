@@ -1,39 +1,94 @@
-from kanban_api.database import SessionLocal
-from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-from kanban_api.models import User
+from kanban_api.database import SessionLocal
+from kanban_api.models import Board, User, Card, Label
 from kanban_api.utils import decode_access_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/tokens")
 
 
-
-async def get_db():
-    async_session = SessionLocal()
+def get_db():
+    db = SessionLocal()
     try:
-        yield async_session
+        yield db
     finally:
-        await async_session.close()
+        db.close()
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     try:
         token_data = decode_access_token(token)
-        if token_data is None:
-            raise credentials_exception
-    except InvalidTokenError as e:
-        raise credentials_exception
-    user = await db.execute(select(User).where(User.id == int(token_data.sub)))
-    user = user.scalar_one_or_none()
-    if user is None:
-        raise credentials_exception
-    return user  # type: ignore
+        if not token_data:
+            # Token is invalid
+            raise InvalidTokenError
+            
+        stmt = select(User).where(User.id == int(token_data.sub))
+        user = db.execute(stmt).scalar_one_or_none()
+        
+        if not user:
+            # Token sub is not a valid user id
+            raise InvalidTokenError
+            
+        return user
+    except InvalidTokenError:
+        raise HTTPException(
+            status_code=401,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+def get_board(board_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Board:
+    stmt = select(Board).where(
+        Board.id == board_id,
+        Board.owners.contains(current_user)
+    )
+    board = db.execute(stmt).scalar_one_or_none()
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found or user is not owner")
+    return board
+
+
+def get_user(user_id: int, db: Session = Depends(get_db)) -> User:
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+def get_card(
+    card_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> Card:
+    stmt = select(Card).join(Board).join(UserBoard).where(
+        Card.id == card_id,
+        UserBoard.user_id == current_user.id
+    )
+    card = db.execute(stmt).scalar_one_or_none()
+    
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+    
+    return card
+
+
+def get_label(
+    label_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> Label:
+    stmt = select(Label).join(Board).join(UserBoard).where(
+        Label.id == label_id,
+        UserBoard.user_id == current_user.id
+    )
+    label = db.execute(stmt).scalar_one_or_none()
+    
+    if not label:
+        raise HTTPException(status_code=404, detail="Label not found")
+    
+    return label

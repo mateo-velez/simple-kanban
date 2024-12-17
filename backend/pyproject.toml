@@ -38,6 +38,7 @@ dev = [
     "isort",
     "flake8",
     "faker",
+    "aiosqlite",
 ]
 
 [tool.pytest.ini_options]

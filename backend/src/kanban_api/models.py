@@ -18,7 +18,7 @@ class User(Base, TimestampMixin):
     hashed_password: Mapped[str] = mapped_column(nullable=False)
 
     # Relationships
-    boards: Mapped[list["Board"]] = relationship("Board", secondary="users_boards", back_populates="users")
+    boards: Mapped[list["Board"]] = relationship("Board", secondary="users_boards", back_populates="owners")
 
 
 class Board(Base, TimestampMixin):
@@ -26,11 +26,11 @@ class Board(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Identity(), primary_key=True)
     title: Mapped[str] = mapped_column(nullable=False)
-    description: Mapped[str] = mapped_column(nullable=False)
+    description: Mapped[str] = mapped_column(nullable=True)
 
     # Relationships
     cards: Mapped[list["Card"]] = relationship("Card", back_populates="board", cascade="all, delete-orphan")
-    users: Mapped[list["User"]] = relationship("User", secondary="users_boards", back_populates="boards")
+    owners: Mapped[list["User"]] = relationship("User", secondary="users_boards", back_populates="boards")
     labels: Mapped[list["Label"]] = relationship("Label", back_populates="board", cascade="all, delete-orphan")
 
 
