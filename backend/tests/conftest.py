@@ -1,8 +1,9 @@
+from faker import Faker
 from fastapi.testclient import TestClient
 from kanban_api.main import app
 from pytest import fixture
 
-
+fake = Faker()
 
 @fixture(scope="session")
 def client() -> TestClient: # type: ignore

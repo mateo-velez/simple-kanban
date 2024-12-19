@@ -1,4 +1,6 @@
 from datetime import datetime
+from kanban_api.schemas.card import CardColumn
+from kanban_api.schemas.label import LabelColor
 from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, func, Identity
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from kanban_api.database import Base
@@ -39,12 +41,17 @@ class Card(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Identity(), primary_key=True)
     title: Mapped[str] = mapped_column(nullable=False)
+    column: Mapped[CardColumn] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
     board_id: Mapped[int] = mapped_column(ForeignKey("board.id", ondelete="CASCADE"), index=True, nullable=False)
 
     # Relationships
     board: Mapped["Board"] = relationship("Board", back_populates="cards")
-    labels: Mapped[list["Label"]] = relationship("Label", secondary="cards_labels", back_populates="cards")
+    labels: Mapped[list["Label"]] = relationship(
+        "Label",
+        secondary="cards_labels",
+        back_populates="cards"
+    )
 
 
 class Label(Base, TimestampMixin):
@@ -52,12 +59,16 @@ class Label(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Identity(), primary_key=True)
     board_id: Mapped[int] = mapped_column(ForeignKey("board.id", ondelete="CASCADE"), index=True, nullable=False)
-    color: Mapped[str] = mapped_column(nullable=False)  # Hex color code
+    color: Mapped[LabelColor] = mapped_column(nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
 
     # Relationships
     board: Mapped["Board"] = relationship("Board", back_populates="labels")
-    cards: Mapped[list["Card"]] = relationship("Card", secondary="cards_labels", back_populates="labels")
+    cards: Mapped[list["Card"]] = relationship(
+        "Card",
+        secondary="cards_labels",
+        back_populates="labels"
+    )
 
     __table_args__ = (UniqueConstraint('board_id', 'color', name='uq_board_id_color'),)
 

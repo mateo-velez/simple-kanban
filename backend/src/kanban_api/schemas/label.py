@@ -1,23 +1,26 @@
 from datetime import datetime
-from typing import Optional
+from enum import Enum
 from kanban_api.schemas.base import BaseSchema
 
 
-# Input models
-class LabelInCreate(BaseSchema):
-    color: str  # Hex color code
-    name: str
+class LabelColor(str, Enum):
+    RED = "red"         # 🔴 
+    ORANGE = "orange"   # 🟠 
+    YELLOW = "yellow"   # 🟡 
+    GREEN = "green"     # 🟢 
+    BLUE = "blue"       # 🔵 
+    PURPLE = "purple"   # 🟣 
+    GRAY = "gray"       # ⚪ 
 
+class LabelInCreate(BaseSchema):
+    color: LabelColor
+    name: str = ""
 
 class LabelInUpdate(BaseSchema):
-    name: Optional[str] = None
-
+    color: LabelColor
+    name: str | None = None
 
 # Output models
 class LabelOut(BaseSchema):
-    id: int
-    color: str
+    color: LabelColor
     name: str
-    board_id: int
-    created_at: datetime
-    updated_at: datetime 

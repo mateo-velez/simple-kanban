@@ -25,14 +25,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"message": "Welcome to Simple Kanban API. Go to /docs for documentation."}
-
-
-app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(user.router)
 app.include_router(board.router)
 app.include_router(card.router)
 

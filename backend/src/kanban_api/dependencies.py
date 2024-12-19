@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from kanban_api.database import SessionLocal
-from kanban_api.models import Board, User, Card, Label
+from kanban_api.models import Board, User, Card, Label, UserBoard
 from kanban_api.utils import decode_access_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/tokens")
@@ -72,23 +72,7 @@ def get_card(
     card = db.execute(stmt).scalar_one_or_none()
     
     if not card:
-        raise HTTPException(status_code=404, detail="Card not found")
+        raise HTTPException(status_code=404, detail="Card not found or user is not owner")
     
     return card
 
-
-def get_label(
-    label_id: int,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-) -> Label:
-    stmt = select(Label).join(Board).join(UserBoard).where(
-        Label.id == label_id,
-        UserBoard.user_id == current_user.id
-    )
-    label = db.execute(stmt).scalar_one_or_none()
-    
-    if not label:
-        raise HTTPException(status_code=404, detail="Label not found")
-    
-    return label

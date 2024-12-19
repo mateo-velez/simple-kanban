@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import Optional
 from kanban_api.schemas.base import BaseSchema
+from kanban_api.schemas.label import LabelColor, LabelInCreate, LabelOut, LabelInUpdate
+from pydantic import computed_field
 
 
 # Input models
@@ -8,16 +9,21 @@ class BoardInCreate(BaseSchema):
     title: str
     description: str = ""
 
+    @computed_field
+    def labels(self) -> list[LabelInCreate]:
+        return [LabelInCreate(color=color) for color in LabelColor]
+
 
 class BoardInUpdate(BaseSchema):
-    title: Optional[str] = None
-    description: Optional[str] = None
-
+    title: str | None = None
+    description: str | None = None
+    labels: list[LabelInUpdate] | None = None
 
 # Output models
 class BoardOut(BaseSchema):
     id: int
     title: str
-    description: Optional[str]
+    labels: list[LabelOut]
+    description: str | None
     created_at: datetime
     updated_at: datetime 
