@@ -9,6 +9,7 @@ import {
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { PlusIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 
 
@@ -41,7 +42,7 @@ export default function BoardPage() {
             title: "Card 1",
             description: "This is my first card",
             column: CardColumn.Backlog,
-            labels: ["red"],
+            labels: ["red", "blue", "purple"],
             boardId: 1,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -51,7 +52,7 @@ export default function BoardPage() {
             title: "Card 2",
             description: "This is my second card",
             column: CardColumn.Todo,
-            labels: ["blue"],
+            labels: ["blue", "gray", "orange"],
             boardId: 1,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -139,11 +140,25 @@ export default function BoardPage() {
 
     ]
 
+
+    const AddCardComponent = () => {
+        return (
+            <div className="p-4 rounded-lg border bg-background items-center justify-center flex hover:bg-accent transition-colors duration-200 cursor-pointer">
+                {/* add big plus icon */}
+                <PlusIcon className="w-8 h-8 text-foreground" />
+            </div>
+        )
+    }
+
     const CardComponent = ({ card }: { card: CardOut }) => {
         return (
-            <div className="p-4 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer">
-                <h3 className="font-medium text-foreground">{card.title}</h3>
-                <p className="text-sm text-muted-foreground">{card.description}</p>
+            <div className="flex flex-col gap-1.5 p-4 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer">
+                <div className="flex gap-2">
+                    {card.labels.map((label) => (
+                        <div key={label} className={`w-4 h-2 rounded-full`} style={{ backgroundColor: label }} />
+                    ))}
+                </div>
+                <h3 className="font-normal text-lg text-foreground">{card.title}</h3>
             </div>
         )
     }
@@ -154,7 +169,7 @@ export default function BoardPage() {
                 <div className="p-4 border-b">
                     <h2 className="text-xl font-semibold text-card-foreground">{title}</h2>
                 </div>
-                <ScrollArea className="h-fit p-2">
+                <ScrollArea className="h-fit max-h-full p-2">
                     <div className="flex flex-col gap-2">
                         {cards.map((card) => (
                             <CardComponent key={card.id} card={card} />
@@ -177,20 +192,27 @@ export default function BoardPage() {
 
     const BacklogComponent = () => {
         return (
-            <div className="flex-1 flex flex-col rounded-lg border bg-card">
+            <div className="h-full flex flex-col rounded-lg border bg-card m-4">
                 <div className="p-4 border-b">
                     <h2 className="text-xl font-semibold text-card-foreground text-center">Backlog</h2>
                 </div>
-                <ScrollArea className="flex-1">
+                <ScrollArea className="h-fit max-h-full ">
                     <div className="grid grid-cols-3 gap-4 p-4">
+                        <AddCardComponent />
                         {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                            <div
-                                key={card.id}
-                                className="p-4 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer"
-                            >
-                                <h3 className="font-medium text-foreground">{card.title}</h3>
-                                <p className="text-sm text-muted-foreground">{card.description}</p>
-                            </div>
+                            <CardComponent key={card.id} card={card} />
+                        ))}
+                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
+                            <CardComponent key={card.id} card={card} />
+                        ))}
+                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
+                            <CardComponent key={card.id} card={card} />
+                        ))}
+                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
+                            <CardComponent key={card.id} card={card} />
+                        ))}
+                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
+                            <CardComponent key={card.id} card={card} />
                         ))}
                     </div>
                 </ScrollArea>
@@ -210,10 +232,11 @@ export default function BoardPage() {
 
                 <ResizableHandle withHandle />
 
-                <ResizablePanel>
-                    <div className="p-4">
+                <ResizablePanel className="h-full">
+                    {/* <div className="p-4">
                         <BacklogComponent />
-                    </div>
+                    </div> */}
+                    <BacklogComponent />
                 </ResizablePanel>
             </ResizablePanelGroup>
         )
