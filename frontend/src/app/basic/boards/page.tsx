@@ -1,4 +1,6 @@
 import { BoardOut } from "@/api-client/models/BoardOut";
+import { LabelOut } from "@/api-client/models/LabelOut";
+import { PlusIcon } from "lucide-react";
 
 
 
@@ -121,22 +123,31 @@ const Label = ({ label }: { label: LabelOut }) => {
     return <div className="bg-gray-600 rounded-md p-2">{label.name}</div>;
 }
 
-// Element to display the board
-const Board = ({ board, className }: { board: BoardOut, className?: string }) => {
-    return <div className={className}>
-        <h1>{board.title}</h1>
-        <p>{board.description}</p>
-        <div>
-            {board.labels.map((label) => <Label key={label.name} label={label} />)}
-        </div>
-        {/* Show update and created at */}
-        <p>Updated at: {board.updatedAt.toLocaleDateString()}</p>
-        <p>Created at: {board.createdAt.toLocaleDateString()}</p>
+const AddBoard = () => {
+    return <div 
+    className="w-52 h-32 rounded-md border p-4 flex flex-col
+    items-center justify-center hover:bg-accent transition-colors duration-200 cursor-pointer">
+        <PlusIcon className="w-4 h-4" />
     </div>;
 }
 
+// Element to display the board
+const Board = ({ board }: { board: BoardOut, className?: string }) => {
+    return (
+        <div className="w-52 h-32 rounded-md border p-4 hover:bg-accent transition-colors duration-200 cursor-pointer">
+            <span className="text-sm text-muted-foreground">{board.title}</span>
+        </div>
+    )
+}
+
 export default function HomePage() {
-    return <div className="flex flex-wrap gap-4">
-        {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+    // Make it compact
+    return <div className="h-full w-full p-4">
+        <div className="flex flex-wrap gap-4">
+            <AddBoard />
+            {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+            {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+            {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+        </div>
     </div>;
 }
