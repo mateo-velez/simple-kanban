@@ -8,7 +8,7 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area-fixed"
 import { PlusIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 
@@ -166,10 +166,10 @@ export default function BoardPage() {
     const DoColumnComponent = ({ title, cards }: { title: string, cards: CardOut[] }) => {
         return (
             <div className="w-full h-fit max-h-full flex flex-col gap-2 bg-card rounded-lg border">
-                <div className="p-4 border-b">
+                <div className="p-4 border-b flex-none">
                     <h2 className="text-xl font-semibold text-card-foreground">{title}</h2>
                 </div>
-                <ScrollArea className="h-fit max-h-full p-2">
+                <ScrollArea className="max-h-full flex p-2">
                     <div className="flex flex-col gap-2">
                         {cards.map((card) => (
                             <CardComponent key={card.id} card={card} />
