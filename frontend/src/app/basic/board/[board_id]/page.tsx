@@ -11,6 +11,13 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area-fixed"
 import { PlusIcon } from "lucide-react";
 import { useParams } from "next/navigation";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
+
+
+
+// define alt strings for dialog content
+// const [selectedString, setSelectedString] = useState("View card");
 
 
 
@@ -140,26 +147,60 @@ export default function BoardPage() {
 
     ]
 
+    interface DialogType {
+        type: "add" | "view";
+        extra?: any;
+    }
+
+    const [dialogType, setDialogType] = useState<DialogType>({ type: "add" });
+
+    const DialogContentRender = ({ dialogType }: { dialogType: DialogType }) => {
+        if (dialogType.type === "add") {
+        return (
+            <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Add card</DialogTitle>
+                        <DialogDescription>Add a new card to the board</DialogDescription>
+                    </DialogHeader>
+            </DialogContent>
+            )
+        } else if (dialogType.type === "view") {
+            return (
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>View card</DialogTitle>
+                        <DialogDescription>View card details</DialogDescription>
+                    </DialogHeader>
+                </DialogContent>
+            )
+        }
+    }
 
     const AddCardComponent = () => {
         return (
-            <div className="p-4 rounded-lg border bg-background items-center justify-center flex hover:bg-accent transition-colors duration-200 cursor-pointer">
-                {/* add big plus icon */}
-                <PlusIcon className="w-8 h-8 text-foreground" />
-            </div>
+            <DialogTrigger asChild>
+                <div
+                    onClick={() => setDialogType({ type: "add" })}
+                    className="p-4 rounded-lg border bg-background items-center justify-center flex hover:bg-accent transition-colors duration-200 cursor-pointer">
+                    {/* add big plus icon */}
+                    <PlusIcon className="w-8 h-8 text-foreground" />
+                </div>
+            </DialogTrigger>
         )
     }
 
     const CardComponent = ({ card }: { card: CardOut }) => {
         return (
-            <div className="flex flex-col gap-1.5 p-4 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer">
-                <div className="flex gap-2">
-                    {card.labels.map((label) => (
-                        <div key={label} className={`w-4 h-2 rounded-full`} style={{ backgroundColor: label }} />
-                    ))}
+            <DialogTrigger asChild>
+                <div onClick={() => setDialogType({ type: "view", extra: card })} className="flex flex-col gap-1.5 p-4 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer">
+                    <div className="flex gap-2">
+                        {card.labels.map((label) => (
+                            <div key={label} className={`w-4 h-2 rounded-full`} style={{ backgroundColor: label }} />
+                        ))}
+                    </div>
+                    <h3 className="font-normal text-lg text-foreground">{card.title}</h3>
                 </div>
-                <h3 className="font-normal text-lg text-foreground">{card.title}</h3>
-            </div>
+            </DialogTrigger>
         )
     }
 
@@ -190,7 +231,7 @@ export default function BoardPage() {
         )
     }
 
-    const BacklogComponent = () => {
+    const Backlog = () => {
         return (
             <div className="h-full flex flex-col rounded-lg border bg-card m-4">
                 <div className="p-4 border-b">
@@ -233,18 +274,18 @@ export default function BoardPage() {
                 <ResizableHandle withHandle />
 
                 <ResizablePanel className="h-full">
-                    {/* <div className="p-4">
-                        <BacklogComponent />
-                    </div> */}
-                    <BacklogComponent />
+                    <Backlog />
                 </ResizablePanel>
             </ResizablePanelGroup>
         )
     }
 
     return (
-        <div className="h-full bg-background">
-            <RezizableDivComponent />
-        </div>
+        <Dialog>
+            <div className="h-full bg-background">
+                <RezizableDivComponent />
+            </div>
+            <DialogContentRender dialogType={dialogType} />
+        </Dialog>
     )
 }

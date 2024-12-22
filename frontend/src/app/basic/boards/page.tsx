@@ -2,6 +2,16 @@ import { BoardOut } from "@/api-client/models/BoardOut";
 import { LabelOut } from "@/api-client/models/LabelOut";
 import { PlusIcon } from "lucide-react";
 
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+
+
 
 
 // Simulated board response from getBoards from api-client/models/BoardOut.ts
@@ -124,11 +134,15 @@ const Label = ({ label }: { label: LabelOut }) => {
 }
 
 const AddBoard = () => {
-    return <div 
-    className="w-52 h-32 rounded-md border p-4 flex flex-col
+    return (
+        <DialogTrigger>
+            <div
+                className="w-52 h-32 rounded-md border p-4 flex flex-col
     items-center justify-center hover:bg-accent transition-colors duration-200 cursor-pointer">
-        <PlusIcon className="w-4 h-4" />
-    </div>;
+                <PlusIcon className="w-4 h-4" />
+            </div>
+        </DialogTrigger>
+    );
 }
 
 // Element to display the board
@@ -142,12 +156,22 @@ const Board = ({ board }: { board: BoardOut, className?: string }) => {
 
 export default function HomePage() {
     // Make it compact
-    return <div className="h-full w-full p-4">
-        <div className="flex flex-wrap gap-4">
-            <AddBoard />
-            {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
-            {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
-            {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+    return <Dialog className="w-full h-full">
+        <div className="h-full w-full p-4">
+            <div className="flex flex-wrap gap-4">
+                <AddBoard />
+                {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+                {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+                {boardResponses.map((board) => <Board key={board.id} board={board} className="border border-gray-300 rounded-md p-4" />)}
+            </div>
         </div>
-    </div>;
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Create new board</DialogTitle>
+                <DialogDescription>
+                    This action will create a new board.
+                </DialogDescription>
+            </DialogHeader>
+        </DialogContent>
+    </Dialog>;
 }
