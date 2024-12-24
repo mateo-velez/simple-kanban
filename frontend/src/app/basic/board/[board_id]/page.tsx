@@ -11,19 +11,21 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area-fixed"
 import { PlusIcon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
+import { DisplayCard, AddCard } from "./_components/card";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form, FormField, FormLabel, FormControl, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogType } from "./_components/base";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { RezizableBoard } from "./_components/board";
 
+export default function BoardPage({ params }: { params: { board_id: string } }) {
 
-
-// define alt strings for dialog content
-// const [selectedString, setSelectedString] = useState("View card");
-
-
-
-export default function BoardPage() {
-
-    const { board_id } = useParams();
     // Sample board data
     const board: BoardOut = {
         id: 1,
@@ -143,149 +145,215 @@ export default function BoardPage() {
             boardId: 1,
             createdAt: new Date(),
             updatedAt: new Date(),
-        },
+        }
 
     ]
 
-    interface DialogType {
-        type: "add" | "view";
-        extra?: any;
+    const [dialogState, setDialogType] = useState<DialogType>({ type: "add" });
+
+    const AddCardForm = () => {
+        const formSchema = z.object({
+            title: z.string().min(1, { message: "Title is required" }),
+        });
+
+        const form = useForm<z.infer<typeof formSchema>>({
+            resolver: zodResolver(formSchema),
+            defaultValues: {
+                title: "",
+            },
+        });
+
+        const onSubmit = (values: z.infer<typeof formSchema>) => {
+            // append to cards on the first index
+            cards.unshift({
+                id: cards.length + 1,
+                title: values.title,
+                description: "",
+                column: CardColumn.Backlog,
+                labels: [],
+                boardId: 1,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
+            // close the dialog
+
+        }
+
+        return (
+            <DialogContent className="sm:max-w-[425px]">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <DialogHeader>
+                            <DialogTitle>Add New Card</DialogTitle>
+                            <DialogDescription>
+                                Create a new card by entering a title below.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Card Title</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Enter card title..."
+                                            {...field}
+                                            className="w-full"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <DialogFooter>
+                            <Button type="submit">Create Card</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        )
     }
 
-    const [dialogType, setDialogType] = useState<DialogType>({ type: "add" });
+    const ViewCardForm = ({ card }: { card: CardOut }) => {
+        const formSchema = z.object({
+            title: z.string().min(1, { message: "Title is required" }),
+            description: z.string(),
+            column: z.nativeEnum(CardColumn),
+            labels: z.array(z.string())
+        });
 
-    const DialogContentRender = ({ dialogType }: { dialogType: DialogType }) => {
-        if (dialogType.type === "add") {
+        const form = useForm<z.infer<typeof formSchema>>({
+            resolver: zodResolver(formSchema),
+            defaultValues: {
+                title: card.title,
+                description: card.description ?? "",
+                column: card.column,
+                labels: card.labels
+            },
+        });
+
+        const onSubmit = (values: z.infer<typeof formSchema>) => {
+            console.log(values);
+        }
+
+
+        const [title_editable, setTitleEditable] = useState(false);
+
         return (
-            <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Add card</DialogTitle>
-                        <DialogDescription>Add a new card to the board</DialogDescription>
-                    </DialogHeader>
+            <DialogContent className="sm:max-w-[425px]">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <DialogHeader>
+                            <DialogTitle>View/Edit Card</DialogTitle>
+                            <DialogDescription>
+                                View or make changes to this card.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        {title_editable ? (
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                onBlur={() => setTitleEditable(false)}
+                                                onKeyDown={() => setTitleEditable(false)}
+                                                className="w-full"
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        ) : (
+                            <h2 className="text-xl font-semibold text-card-foreground" onClick={() => setTitleEditable(true)}>{card.title}</h2>
+                        )}
+
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            className="w-full"
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="column"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Status</FormLabel>
+                                    <FormControl>
+                                        <select {...field} className="w-full p-2 border rounded">
+                                            <option value={CardColumn.Backlog}>Backlog</option>
+                                            <option value={CardColumn.Todo}>Todo</option>
+                                            <option value={CardColumn.Doing}>Doing</option>
+                                            <option value={CardColumn.Done}>Done</option>
+                                        </select>
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <DialogFooter>
+                            <Button type="submit">Save Changes</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
             </DialogContent>
-            )
-        } else if (dialogType.type === "view") {
+        )
+    }
+
+    const DialogContentRender = ({ dialogState }: { dialogState: DialogType }) => {
+        if (dialogState.type === "add") {
             return (
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>View card</DialogTitle>
-                        <DialogDescription>View card details</DialogDescription>
-                    </DialogHeader>
-                </DialogContent>
+                <AddCardForm />
+            )
+        } else if (dialogState.type === "view") {
+            const defaultCard: CardOut = {
+                id: 0,
+                title: "",
+                description: "",
+                column: CardColumn.Backlog,
+                labels: [],
+                boardId: 0,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+            return (
+                <ViewCardForm card={dialogState.card ?? defaultCard} />
             )
         }
     }
 
-    const AddCardComponent = () => {
-        return (
-            <DialogTrigger asChild>
-                <div
-                    onClick={() => setDialogType({ type: "add" })}
-                    className="p-4 rounded-lg border bg-background items-center justify-center flex hover:bg-accent transition-colors duration-200 cursor-pointer">
-                    {/* add big plus icon */}
-                    <PlusIcon className="w-8 h-8 text-foreground" />
-                </div>
-            </DialogTrigger>
-        )
-    }
-
-    const CardComponent = ({ card }: { card: CardOut }) => {
-        return (
-            <DialogTrigger asChild>
-                <div onClick={() => setDialogType({ type: "view", extra: card })} className="flex flex-col gap-1.5 p-4 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer">
-                    <div className="flex gap-2">
-                        {card.labels.map((label) => (
-                            <div key={label} className={`w-4 h-2 rounded-full`} style={{ backgroundColor: label }} />
-                        ))}
-                    </div>
-                    <h3 className="font-normal text-lg text-foreground">{card.title}</h3>
-                </div>
-            </DialogTrigger>
-        )
-    }
-
-    const DoColumnComponent = ({ title, cards }: { title: string, cards: CardOut[] }) => {
-        return (
-            <div className="w-full h-fit max-h-full flex flex-col gap-2 bg-card rounded-lg border">
-                <div className="p-4 border-b flex-none">
-                    <h2 className="text-xl font-semibold text-card-foreground">{title}</h2>
-                </div>
-                <ScrollArea className="max-h-full flex p-2">
-                    <div className="flex flex-col gap-2">
-                        {cards.map((card) => (
-                            <CardComponent key={card.id} card={card} />
-                        ))}
-                    </div>
-                </ScrollArea>
-            </div>
-        )
-    }
-
-    const DoColumnsComponent = () => {
-        return (
-            <div className="h-full flex gap-4 p-4">
-                <DoColumnComponent title="Todo" cards={cards.filter((card) => card.column === CardColumn.Todo)} />
-                <DoColumnComponent title="Doing" cards={cards.filter((card) => card.column === CardColumn.Doing)} />
-                <DoColumnComponent title="Done" cards={cards.filter((card) => card.column === CardColumn.Done)} />
-            </div>
-        )
-    }
-
-    const Backlog = () => {
-        return (
-            <div className="h-full flex flex-col rounded-lg border bg-card m-4">
-                <div className="p-4 border-b">
-                    <h2 className="text-xl font-semibold text-card-foreground text-center">Backlog</h2>
-                </div>
-                <ScrollArea className="h-fit max-h-full ">
-                    <div className="grid grid-cols-3 gap-4 p-4">
-                        <AddCardComponent />
-                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                            <CardComponent key={card.id} card={card} />
-                        ))}
-                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                            <CardComponent key={card.id} card={card} />
-                        ))}
-                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                            <CardComponent key={card.id} card={card} />
-                        ))}
-                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                            <CardComponent key={card.id} card={card} />
-                        ))}
-                        {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                            <CardComponent key={card.id} card={card} />
-                        ))}
-                    </div>
-                </ScrollArea>
-            </div>
-        )
-    }
-
-    const RezizableDivComponent = () => {
-        return (
-            <ResizablePanelGroup
-                direction="vertical"
-                className="h-full rounded-lg"
-            >
-                <ResizablePanel defaultSize={70} minSize={30} className="h-full">
-                    <DoColumnsComponent />
-                </ResizablePanel>
-
-                <ResizableHandle withHandle />
-
-                <ResizablePanel className="h-full">
-                    <Backlog />
-                </ResizablePanel>
-            </ResizablePanelGroup>
-        )
-    }
 
     return (
-        <Dialog>
-            <div className="h-full bg-background">
-                <RezizableDivComponent />
+        <div className="h-full w-full flex flex-col">
+            <div className="flex-1 flex border-b pb-1">
+                <SidebarTrigger />
+                <div className="flex-1 flex justify-end">
+                    {/* show board title on the right */}
+                    <div className="flex flex-col justify-center hover:bg-card-foreground/10 rounded-md pl-1 pr-1">
+                    <h1 className="text-xl font-bold text-card-foreground hover:cursor-pointer">{board.title}</h1>
+                    </div>
+                </div>
             </div>
-            <DialogContentRender dialogType={dialogType} />
-        </Dialog>
+            <div className="h-full bg-background">
+                <RezizableBoard cards={cards} setDialogType={setDialogType} />
+            </div>
+            <DialogContentRender dialogState={dialogState} />
+        </div>
     )
 }
