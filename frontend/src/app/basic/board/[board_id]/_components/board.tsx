@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { ScrollArea } from "@/components/ui/scroll-area-fixed"
 import { DisplayCard, AddCard } from "./card"
 import { CardColumn } from "@/api-client/models/CardColumn"
-import { DialogType } from "./base"
+import { DialogType } from "./dialogs/dialog"
 import { CardOut } from "@/api-client/models/CardOut"
 
 // Take in cards as children
@@ -40,7 +40,7 @@ const Backlog = ({ children }: { children: React.ReactNode }) => {
 
 
 
-export const RezizableBoard = ({ cards, setDialogType }: { cards: CardOut[], setDialogType: (dialogState: DialogType) => void }) => {
+export const RezizableBoard = ({ cards, setDialogState }: { cards: CardOut[], setDialogState: (dialogState: DialogType) => void }) => {
 
 
     return (
@@ -51,17 +51,17 @@ export const RezizableBoard = ({ cards, setDialogType }: { cards: CardOut[], set
             <ResizablePanel defaultSize={70} minSize={30} className="h-full flex gap-4 p-4">
                 <Column title="Todo">
                     {cards.filter(card => card.column === CardColumn.Todo).map((card) => (
-                        <DisplayCard key={card.id} card={card} setDialogType={setDialogType} />
+                        <DisplayCard key={card.id} card={card} setDialogState={setDialogState} />
                     ))}
                 </Column>
                 <Column title="Doing">
                     {cards.filter(card => card.column === CardColumn.Doing).map((card) => (
-                        <DisplayCard key={card.id} card={card} setDialogType={setDialogType} />
+                        <DisplayCard key={card.id} card={card} setDialogState={setDialogState} />
                     ))}
                 </Column>
                 <Column title="Done">
                     {cards.filter(card => card.column === CardColumn.Done).map((card) => (
-                        <DisplayCard key={card.id} card={card} setDialogType={setDialogType} />
+                        <DisplayCard key={card.id} card={card} setDialogState={setDialogState} />
                     ))}
                 </Column>
             </ResizablePanel>
@@ -70,9 +70,9 @@ export const RezizableBoard = ({ cards, setDialogType }: { cards: CardOut[], set
 
             <ResizablePanel className="h-full">
                 <Backlog>
-                    <AddCard setDialogType={setDialogType} />
+                    <AddCard setDialogState={setDialogState}/>
                     {cards.filter(card => card.column === CardColumn.Backlog).map((card) => (
-                        <DisplayCard key={card.id} card={card} setDialogType={setDialogType} />
+                        <DisplayCard key={card.id} card={card} setDialogState={setDialogState}/>
                     ))}
                 </Backlog>
             </ResizablePanel>

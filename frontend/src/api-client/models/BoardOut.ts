@@ -50,7 +50,7 @@ export interface BoardOut {
      * @type {string}
      * @memberof BoardOut
      */
-    description: string | null;
+    description: string;
     /**
      * 
      * @type {Date}

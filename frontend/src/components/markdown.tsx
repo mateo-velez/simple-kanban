@@ -1,18 +1,19 @@
    // components/MarkdownRenderer.tsx
    import React from 'react';
-   import MarkdownIt from 'markdown-it';
-
-   const md = new MarkdownIt();
+   import ReactMarkdown from 'react-markdown';
+   import remarkGfm from 'remark-gfm';
 
    interface MarkdownRendererProps {
      content: string;
    }
 
    const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
-     const htmlContent = md.render(content);
-     console.log(htmlContent);
      return (
-       <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+       <div className="prose max-w-none">
+         <ReactMarkdown remarkPlugins={[remarkGfm]}>
+           {content}
+         </ReactMarkdown>
+       </div>
      );
    };
 

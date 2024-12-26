@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Sidebar,
   SidebarContent,
@@ -14,15 +16,18 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import { useRouter } from "next/navigation";
 
 
 export function AppSidebar() {
+  const router = useRouter();
   return (
     <Sidebar>
       <SidebarHeader>
         {/* Add simple kanban icon from lucide */}
         <div className="w-8 h-8">
-          <KanbanIcon />
+          {/* make it clickable and redirect to home */}
+          <KanbanIcon className="cursor-pointer hover:text-primary" onClick={() => router.push('/basic/boards')}/>
         </div>
       </SidebarHeader>
       <SidebarContent>

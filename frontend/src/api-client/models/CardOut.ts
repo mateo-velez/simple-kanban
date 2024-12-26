@@ -51,7 +51,7 @@ export interface CardOut {
      * @type {string}
      * @memberof CardOut
      */
-    description: string | null;
+    description: string;
     /**
      * 
      * @type {number}

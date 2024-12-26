@@ -6,11 +6,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <Dialog>
         <main className="h-screen w-screen">
           {children}
         </main>
-      </Dialog>
     </SidebarProvider>
   )
 }
