@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from kanban_api import __version__
 from kanban_api.config import settings
 from kanban_api.database import engine, Base
@@ -23,6 +24,18 @@ app = FastAPI(
     description="A simple kanban API",
     version=__version__,
     lifespan=lifespan,
+)
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(auth.router)

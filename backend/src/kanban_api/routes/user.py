@@ -13,11 +13,11 @@ router = APIRouter(prefix="/users", tags=["users"])
 def create_user(user_create: UserInCreate, db: Session = Depends(get_db)) -> UserOut:
     stmt = select(User).where(User.email == user_create.email)
     existing_user = db.execute(stmt).scalar_one_or_none()
-    
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
 
-    user = User(**user_create.model_dump(exclude=['password']))
+    if existing_user:
+        raise HTTPException(status_code=409, detail="Email already registered")
+
+    user = User(**user_create.model_dump(exclude=["password"]))
     db.add(user)
     db.commit()
     db.refresh(user)

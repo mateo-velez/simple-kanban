@@ -24,7 +24,8 @@ def update_card(
 ) -> CardOut:
     update_attributes(card, card_update.model_dump(exclude_unset=True, exclude=["labels"]))
 
-    card.labels = [label for label in card.board.labels if label.color in card_update.labels]
+    if card_update.labels:
+        card.labels = [label for label in card.board.labels if label.color in card_update.labels]
     db.commit()
     db.refresh(card)
     return card

@@ -28,7 +28,7 @@ class CardInUpdate(BaseSchema):
 class CardOut(BaseSchema):
     id: int
     title: str
-    description: str | None
+    description: str
     board_id: int
     column: CardColumn
     labels: list[LabelColor]

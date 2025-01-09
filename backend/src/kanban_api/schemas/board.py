@@ -24,6 +24,6 @@ class BoardOut(BaseSchema):
     id: int
     title: str
     labels: list[LabelOut]
-    description: str | None
+    description: str
     created_at: datetime
     updated_at: datetime 

@@ -41,7 +41,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-
 def get_board(board_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Board:
     stmt = select(Board).where(
         Board.id == board_id,
