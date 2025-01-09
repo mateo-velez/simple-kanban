@@ -1,15 +1,11 @@
 "use client";
 
-import { LoginForm } from "@/components/login-form";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getToken } from "@/auth/utils";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { SignupForm } from "@/components/signup-form";
+import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
-
-// TODO
-// - add signup link
-// - shows when email or password is invalid
-// - add wait component when waiting for useeffect
 
 export default function Page() {
     const router = useRouter();
@@ -34,7 +30,7 @@ export default function Page() {
     return (
         <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm">
-                <LoginForm />
+                <SignupForm />
             </div>
         </div>
     );
