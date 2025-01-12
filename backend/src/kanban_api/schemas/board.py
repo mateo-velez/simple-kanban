@@ -19,6 +19,7 @@ class BoardInUpdate(BaseSchema):
     description: str | None = None
     labels: list[LabelInUpdate] | None = None
 
+
 # Output models
 class BoardOut(BaseSchema):
     id: int
@@ -26,4 +27,4 @@ class BoardOut(BaseSchema):
     labels: list[LabelOut]
     description: str
     created_at: datetime
-    updated_at: datetime 
+    updated_at: datetime

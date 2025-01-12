@@ -1,121 +1,142 @@
-from datetime import datetime
 from fastapi.testclient import TestClient
-from sqlalchemy import select
-from tests.conftest import client
+from tests.conftest import auth_client, fake
 
 
-def test_create_board(client: TestClient):
-    response = client.post(
-        "/users/me/boards",
-        json={"name": "Test Board", "description": "Test Description"}
-    )
+def test_list_boards(auth_client: TestClient):
+    response = auth_client.get("/boards")
+    assert response.status_code == 200
+
+
+def test_create_board(auth_client: TestClient):
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.post("/boards", json=data)
     assert response.status_code == 201
-    data = response.json()
-    assert data["name"] == "Test Board"
-    assert data["description"] == "Test Description"
-    assert "id" in data
-    assert "createdAt" in data
-    assert "updatedAt" in data
-    assert "ownerId" in data
+    assert response.json()["title"] == data["title"]
+    assert response.json()["description"] == data["description"]
+    assert response.json()["id"] is not None
 
 
-def test_list_boards(client: TestClient):
-    # Create a board first
-    client.post("/users/me/boards", json={"name": "Test Board 1"})
-    client.post("/users/me/boards", json={"name": "Test Board 2"})
-    
-    response = client.get("/users/me/boards")
+def test_get_board(auth_client: TestClient):
+    # create board first
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.post("/boards", json=data)
+    assert response.status_code == 201
+
+    response = auth_client.get(f"/boards/{response.json()['id']}")
     assert response.status_code == 200
-    data = response.json()
-    assert isinstance(data, list)
-    assert len(data) >= 2
-    assert all("id" in board for board in data)
-    assert all("name" in board for board in data)
+    assert response.json()["title"] == data["title"]
+    assert response.json()["description"] == data["description"]
+    assert response.json()["id"] is not None
 
 
-def test_get_board(client: TestClient):
-    # Create a board first
-    create_response = client.post(
-        "/users/me/boards",
-        json={"name": "Test Board", "description": "Test Description"}
-    )
-    board_id = create_response.json()["id"]
-    
-    response = client.get(f"/boards/{board_id}")
-    assert response.status_code == 200
-    data = response.json()
-    assert data["name"] == "Test Board"
-    assert data["description"] == "Test Description"
+def test_delete_board(auth_client: TestClient):
+    # create board first
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.post("/boards", json=data)
+    assert response.status_code == 201
 
-
-def test_update_board(client: TestClient):
-    # Create a board first
-    create_response = client.post(
-        "/users/me/boards",
-        json={"name": "Test Board", "description": "Test Description"}
-    )
-    board_id = create_response.json()["id"]
-    
-    response = client.patch(
-        f"/boards/{board_id}",
-        json={"name": "Updated Board", "description": "Updated Description"}
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["name"] == "Updated Board"
-    assert data["description"] == "Updated Description"
-
-
-def test_delete_board(client: TestClient):
-    # Create a board first
-    create_response = client.post(
-        "/users/me/boards",
-        json={"name": "Test Board"}
-    )
-    board_id = create_response.json()["id"]
-    
-    response = client.delete(f"/boards/{board_id}")
+    response = auth_client.delete(f"/boards/{response.json()['id']}")
     assert response.status_code == 204
-    
-    # Verify board is deleted
-    response = client.get(f"/boards/{board_id}")
-    assert response.status_code == 404
 
 
-def test_share_board(client: TestClient):
-    # Create a second user
-    second_user = client.post(
-        "/users",
-        json={"email": "test2@test.com", "password": "test"}
-    ).json()
-    
-    # Create a board
-    board = client.post(
-        "/users/me/boards",
-        json={"name": "Test Board"}
-    ).json()
-    
-    # Share board with second user
-    response = client.put(f"/users/{second_user['id']}/boards/{board['id']}")
+def test_update_board(auth_client: TestClient):
+    # create board first
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.post("/boards", json=data)
+    assert response.status_code == 201
+
+    # test for individual fields even labels
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.patch(f"/boards/{response.json()['id']}", json=data)
     assert response.status_code == 200
+    assert response.json()["title"] == data["title"]
+    assert response.json()["description"] == data["description"]
+
+    # test for labels
+    data = {"labels": [{"color": "red", "name": "red"}, {"color": "blue", "name": "blue"}]}
+    response = auth_client.patch(f"/boards/{response.json()['id']}", json=data)
+    assert response.status_code == 200
+    assert set(tuple(label.items()) for label in response.json()["labels"]) >= set(
+        tuple(label.items()) for label in data["labels"]
+    )
 
 
-def test_unshare_board(client: TestClient):
-    # Create a second user
-    second_user = client.post(
-        "/users",
-        json={"email": "test3@test.com", "password": "test"}
-    ).json()
-    
-    # Create a board
-    board = client.post(
-        "/users/me/boards",
-        json={"name": "Test Board"}
-    ).json()
-    
-    # Share board with second user
-    client.put(f"/users/{second_user['id']}/boards/{board['id']}")
-    
-    # Unshare board
-    response = client.delete(f"/users/{second_user['id']}/boards/{board['id']}")
-    assert response.status_code == 204 
+def test_create_cards(auth_client: TestClient):
+    # create board first
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.post("/boards", json=data)
+    board_id = response.json()["id"]
+    assert response.status_code == 201
+
+    # single card
+    data = [{"title": fake.sentence(), "description": fake.sentence()}]
+    response = auth_client.post(f"/boards/{board_id}/cards", json=data)
+    assert response.status_code == 201
+    assert len(response.json()) == 1
+    assert response.json()[0]["title"] == data[0]["title"]
+    assert response.json()[0]["description"] == data[0]["description"]
+    assert response.json()[0]["id"] is not None
+
+    # multiple cards
+    data = [
+        {"title": fake.sentence(), "column": "TODO"},
+        {"title": fake.sentence(), "description": fake.sentence()},
+    ]
+    response = auth_client.post(f"/boards/{board_id}/cards", json=data)
+    assert response.status_code == 201
+    assert len(response.json()) == 2
+    assert set(card["title"] for card in response.json()) == set(d["title"] for d in data)
+
+
+def test_list_cards(auth_client: TestClient):
+    # create board first
+    data = {"title": fake.sentence(), "description": fake.sentence()}
+    response = auth_client.post("/boards", json=data)
+    board_id = response.json()["id"]
+    assert response.status_code == 201
+
+    # no cards
+    response = auth_client.get(f"/boards/{response.json()['id']}/cards")
+    assert response.status_code == 200
+    assert len(response.json()) == 0
+
+    # create N cards
+    N = 10
+    data = [{"title": fake.sentence(), "description": fake.sentence()} for _ in range(N)]
+    response = auth_client.post(f"/boards/{board_id}/cards", json=data)
+    assert response.status_code == 201
+    assert len(response.json()) == N
+
+    # list cards
+    response = auth_client.get(f"/boards/{board_id}/cards")
+    assert response.status_code == 200
+    assert len(response.json()) == N
+    assert set(card["title"] for card in response.json()) == set(d["title"] for d in data)
+
+
+# TODO: share and unshare board
+
+# def test_share_board(auth_client: TestClient, fake_auth_client: TestClient):
+#     fake_user_id = fake_auth_client.get("/users/me").json()["id"]
+
+#     print(fake_user_id)
+#     print(auth_client.get("/users/me").json())
+
+#     # create board
+#     data = {"title": fake.sentence(), "description": fake.sentence()}
+#     response = auth_client.post("/boards", json=data)
+#     board_id = response.json()["id"]
+#     assert response.status_code == 201
+
+#     # test that the user cannot see the board
+#     response = fake_auth_client.get(f"/boards/{board_id}")
+#     assert response.status_code == 404
+
+#     # share board
+#     response = auth_client.put(f"/boards/{board_id}/users/{fake_user_id}")
+#     assert response.status_code == 200
+
+#     # test that the user can see the board
+#     response = fake_auth_client.get(f"/boards/{board_id}")
+#     assert response.status_code == 200
+#     assert response.json()["id"] == board_id

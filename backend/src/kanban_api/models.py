@@ -12,6 +12,7 @@ class TimestampMixin:
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
     )
 
+
 class User(Base, TimestampMixin):
     __tablename__ = "user"
 
@@ -47,11 +48,7 @@ class Card(Base, TimestampMixin):
 
     # Relationships
     board: Mapped["Board"] = relationship("Board", back_populates="cards")
-    labels: Mapped[list["Label"]] = relationship(
-        "Label",
-        secondary="cards_labels",
-        back_populates="cards"
-    )
+    labels: Mapped[list["Label"]] = relationship("Label", secondary="cards_labels", back_populates="cards")
 
 
 class Label(Base, TimestampMixin):
@@ -64,13 +61,10 @@ class Label(Base, TimestampMixin):
 
     # Relationships
     board: Mapped["Board"] = relationship("Board", back_populates="labels")
-    cards: Mapped[list["Card"]] = relationship(
-        "Card",
-        secondary="cards_labels",
-        back_populates="labels"
-    )
+    cards: Mapped[list["Card"]] = relationship("Card", secondary="cards_labels", back_populates="labels")
 
-    __table_args__ = (UniqueConstraint('board_id', 'color', name='uq_board_id_color'),)
+    __table_args__ = (UniqueConstraint("board_id", "color", name="uq_board_id_color"),)
+
 
 class UserBoard(Base, TimestampMixin):
     __tablename__ = "users_boards"
@@ -81,7 +75,6 @@ class UserBoard(Base, TimestampMixin):
 
 class CardLabel(Base, TimestampMixin):
     __tablename__ = "cards_labels"
-    
+
     card_id: Mapped[int] = mapped_column(ForeignKey("card.id", ondelete="CASCADE"), primary_key=True, index=True)
     label_id: Mapped[int] = mapped_column(ForeignKey("label.id", ondelete="CASCADE"), primary_key=True, index=True)
-

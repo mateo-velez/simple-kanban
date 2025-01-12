@@ -10,14 +10,15 @@ from kanban_api.routes import user, auth, board, card
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # before the app starts
 
     if settings.drop_all:
         Base.metadata.drop_all(bind=engine)
+
     Base.metadata.create_all(bind=engine)
 
     yield
     # after the app shuts down
+
 
 app = FastAPI(
     title="Simple Kanban API",
@@ -26,9 +27,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-origins = [
-    "*"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
