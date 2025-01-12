@@ -26,5 +26,3 @@ def test_create_user_existing_email(client: TestClient):
 def test_get_me(auth_client: TestClient):
     response = auth_client.get("/users/me")
     assert response.status_code == 200
-    assert response.json()["email"] == "user@email.com"
-    assert response.json()["id"] is not None

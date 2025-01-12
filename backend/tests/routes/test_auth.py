@@ -1,5 +1,5 @@
-from fastapi.testclient import TestClient
 from tests.conftest import client, fake
+from fastapi.testclient import TestClient
 
 
 def test_login_success(client: TestClient):

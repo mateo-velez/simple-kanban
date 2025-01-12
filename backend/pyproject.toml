@@ -20,25 +20,25 @@ dependencies = [
     "uvicorn[standard]",
     "sqlalchemy",
     "pydantic",
+    "pydantic[email]",
     "pyjwt",
     "pydantic-settings",
     "passlib[bcrypt]",
     "psycopg2-binary",
     "sqlalchemy[asyncio]",
     "asyncpg",
+    "python-multipart",
 ]
 
 [project.optional-dependencies]
 dev = [
     "fastapi[standard]",
     "pytest",
-    "pytest-asyncio",
     "httpx",
     "black",
     "isort",
     "flake8",
     "faker",
-    "aiosqlite",
 ]
 
 [tool.pytest.ini_options]

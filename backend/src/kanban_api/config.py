@@ -9,11 +9,8 @@ class Settings(BaseSettings):
     db_url: str
     db_echo: bool = False
     drop_all: bool = False
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
-        extra = "ignore"
+
+    model_config = {"env_file": ".env", "case_sensitive": False, "extra": "ignore"}
 
 
-
-settings = Settings()
+settings = Settings()  # type: ignore
