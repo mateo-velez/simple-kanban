@@ -1,3 +1,4 @@
+import asyncio
 from mcp.server.fastmcp import FastMCP
 from src.client.models import (
     Token,
@@ -135,35 +136,49 @@ async def create_cards(board_id: int, cards_in_create: list[CardInCreate]):
 
 
 @mcp.tool()
-async def get_card(card_id: int):
+async def get_cards(card_ids: list[int]):
     """Get a card by its ID."""
     api_config = get_api_config()
-    response: CardOut = await get_card_cards__card_id__get(
-        card_id=card_id,
-        api_config_override=api_config,
+    responses: list[CardOut] = await asyncio.gather(
+        *(
+            get_card_cards__card_id__get(
+                card_id=card_id,
+                api_config_override=api_config,
+            )
+            for card_id in card_ids
+        )
     )
-    return response
+    return responses
 
 
 @mcp.tool()
-async def update_card(card_id: int, card_in_update: CardInUpdate):
+async def update_cards(card_id: int, cards_in_update: list[CardInUpdate]):
     """Update a card by its ID."""
     api_config = get_api_config()
-    response: CardOut = await update_card_cards__card_id__patch(
-        card_id=card_id,
-        data=card_in_update,
-        api_config_override=api_config,
+    responses: list[CardOut] = await asyncio.gather(
+        *(
+            update_card_cards__card_id__patch(
+                card_id=card_id,
+                data=card_in_update,
+                api_config_override=api_config,
+            )
+            for card_in_update in cards_in_update
+        )
     )
-    return response
+    return responses
 
 
 @mcp.tool()
-async def delete_card(card_id: int):
+async def delete_cards(card_ids: list[int]):
     """Delete a card by its ID."""
     api_config = get_api_config()
-    await delete_card_cards__card_id__delete(
-        card_id=card_id,
-        api_config_override=api_config,
+    await asyncio.gather(
+        *(
+            delete_card_cards__card_id__delete(
+                card_id=card_id, api_config_override=api_config
+            )
+            for card_id in card_ids
+        )
     )
 
 
