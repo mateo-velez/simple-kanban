@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from kanban_api import __version__
 from kanban_api.config import settings
 from kanban_api.database import engine, Base
@@ -37,10 +38,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router)
-app.include_router(user.router)
-app.include_router(board.router)
-app.include_router(card.router)
+api = APIRouter(prefix="/api")
+
+api.include_router(auth.router)
+api.include_router(user.router)
+api.include_router(board.router)
+api.include_router(card.router)
+
+app.include_router(api)
+
+app.mount("/", StaticFiles(directory=settings.static_files_dir, html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn

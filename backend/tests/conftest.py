@@ -11,7 +11,7 @@ fake = Faker()
 def client() -> Generator[TestClient, None, None]:
     from kanban_api.main import app
 
-    with TestClient(app) as client:
+    with TestClient(app, base_url="http://testserver/api") as client:
         yield client
 
 
