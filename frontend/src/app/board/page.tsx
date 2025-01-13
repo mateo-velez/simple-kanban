@@ -1,8 +1,8 @@
 "use client";
 
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { BoardsApi } from "@/api-client/apis/BoardsApi";
 import { getConfig } from "@/auth/utils";
@@ -14,10 +14,11 @@ import { Spinner } from "@/components/ui/spinner";
 import { Data, Metadata } from "./_components/interfaces";
 
 import { useToast } from "@/hooks/use-toast";
-export default function BoardPage() {
+
+function BoardContent() {
     const boardApi = new BoardsApi(getConfig());
-    const params = useParams<{ board_id: string }>();
-    const boardId = parseInt(params.board_id);
+    const searchParams = useSearchParams();
+    const boardId = parseInt(searchParams.get("board_id") || "0");
     const router = useRouter();
     const { toast } = useToast();
     const [data, setData] = useState<Data>({
@@ -71,5 +72,19 @@ export default function BoardPage() {
                 </div>
             </div>
         </DialogRoot>
+    );
+}
+
+export default function BoardPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="h-full w-full flex items-center justify-center">
+                    <Spinner />
+                </div>
+            }
+        >
+            <BoardContent />
+        </Suspense>
     );
 }

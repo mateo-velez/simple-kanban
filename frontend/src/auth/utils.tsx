@@ -34,8 +34,15 @@ export const clearToken = (): void => {
 
 export const getConfig = (): Configuration => {
     const token = getToken();
+    const basePath = "http://192.168.1.72:8000/api";
     if (token) {
-        return new Configuration({ accessToken: "Bearer " + token.accessToken });
+        return new Configuration({
+            accessToken: "Bearer " + token.accessToken,
+            basePath: basePath,
+        });
+    } else {
+        return new Configuration({
+            basePath: basePath,
+        });
     }
-    return DefaultConfig;
 };

@@ -160,7 +160,7 @@ export default function HomePage() {
         fetchBoards();
     }, []);
 
-    if (!boards)
+    if (boards.length === 0)
         return (
             <div className="h-full w-full flex items-center justify-center">
                 <Spinner />
