@@ -43,5 +43,9 @@ RUN pip install --no-cache-dir .
 # Copy actual source files
 COPY src/ src/
 
+# Create static directory and copy frontend build
+RUN mkdir -p static
+COPY static/ static/
+
 EXPOSE 8000
-CMD ["uvicorn", "kanban_api.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+CMD ["uvicorn", "kanban_api.main:app", "--host", "0.0.0.0", "--port", "8000"]
