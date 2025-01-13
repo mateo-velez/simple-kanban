@@ -129,6 +129,7 @@ const boardResponses: BoardOut[] = [
 
 export default function HomePage() {
     const [boards, setBoards] = useState<BoardOut[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
@@ -158,9 +159,10 @@ export default function HomePage() {
             }
         };
         fetchBoards();
+        setIsLoading(false);
     }, []);
 
-    if (boards.length === 0)
+    if (isLoading)
         return (
             <div className="h-full w-full flex items-center justify-center">
                 <Spinner />

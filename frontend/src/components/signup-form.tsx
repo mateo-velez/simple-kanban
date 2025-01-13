@@ -18,6 +18,7 @@ import {
 import { useForm } from "react-hook-form";
 import { ResponseError } from "@/api-client/runtime";
 import { useRouter } from "next/navigation";
+import { getConfig } from "@/auth/utils";
 const formSchema = z.object({
     email: z.string().email({
         message: "Please enter a valid email address.",
@@ -39,7 +40,7 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
     const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const usersApi = new UsersApi();
+        const usersApi = new UsersApi(getConfig());
         try {
             const response = await usersApi.createUserUsersPost({
                 userInCreate: {

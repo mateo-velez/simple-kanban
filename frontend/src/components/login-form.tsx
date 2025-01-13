@@ -16,7 +16,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { getToken, setToken } from "@/auth/utils";
+import { getConfig, getToken, setToken } from "@/auth/utils";
 import { useRouter } from "next/navigation";
 import { ResponseError } from "@/api-client/runtime";
 
@@ -42,7 +42,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     const router = useRouter();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const authApi = new AuthApi();
+        const authApi = new AuthApi(getConfig());
         try {
             const token = await authApi.loginAuthTokensPost({
                 username: values.email,
