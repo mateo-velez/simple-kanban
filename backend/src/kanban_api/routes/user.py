@@ -17,7 +17,7 @@ def create_user(user_create: UserInCreate, db: Session = Depends(get_db)) -> Use
     if existing_user:
         raise HTTPException(status_code=409, detail="Email already registered")
 
-    user = User(**user_create.model_dump(exclude=["password"]))
+    user = User(**user_create.model_dump(exclude={"password"}))
     db.add(user)
     db.commit()
     db.refresh(user)
