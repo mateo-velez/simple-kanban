@@ -3,7 +3,11 @@
 import { Token } from "@/api-client/models/Token";
 import { DefaultConfig, Configuration } from "@/api-client/runtime";
 
+const isBrowser = typeof localStorage !== "undefined";
+
 export const getToken = (): Token | null => {
+    if (!isBrowser) return null;
+
     try {
         const tokenStr = localStorage.getItem("token");
         if (!tokenStr) return null;
@@ -15,6 +19,8 @@ export const getToken = (): Token | null => {
 };
 
 export const setToken = (token: Token): void => {
+    if (!isBrowser) return;
+
     try {
         localStorage.setItem("token", JSON.stringify(token));
     } catch (error) {
@@ -24,6 +30,8 @@ export const setToken = (token: Token): void => {
 };
 
 export const clearToken = (): void => {
+    if (!isBrowser) return;
+
     try {
         localStorage.removeItem("token");
     } catch (error) {
@@ -34,15 +42,10 @@ export const clearToken = (): void => {
 
 export const getConfig = (): Configuration => {
     const token = getToken();
-    const basePath = "http://192.168.1.72:8000/api";
-    if (token) {
-        return new Configuration({
-            accessToken: "Bearer " + token.accessToken,
-            basePath: basePath,
-        });
-    } else {
-        return new Configuration({
-            basePath: basePath,
-        });
-    }
+    const basePath = process.env.NODE_ENV === "development" ? "http://localhost:8000/api" : "/api";
+
+    return new Configuration({
+        ...(token && { accessToken: "Bearer " + token.accessToken }),
+        basePath: basePath,
+    });
 };
