@@ -16,4 +16,4 @@ def decode_access_token(token: str) -> TokenData | None:
     decoded = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])  # type: ignore
     if decoded.get("sub") is None:
         return None
-    return TokenData(**decoded) 
+    return TokenData(**decoded)

@@ -17,11 +17,7 @@ def get_card(
 
 
 @router.patch("/{card_id}", status_code=200)
-def update_card(
-    card_update: CardInUpdate,
-    card: Card = Depends(get_card),
-    db: Session = Depends(get_db)
-) -> CardOut:
+def update_card(card_update: CardInUpdate, card: Card = Depends(get_card), db: Session = Depends(get_db)) -> CardOut:
     update_attributes(card, card_update.model_dump(exclude_unset=True, exclude=["labels"]))
 
     if card_update.labels:
@@ -32,9 +28,6 @@ def update_card(
 
 
 @router.delete("/{card_id}", status_code=204)
-def delete_card(
-    card: Card = Depends(get_card),
-    db: Session = Depends(get_db)
-):
+def delete_card(card: Card = Depends(get_card), db: Session = Depends(get_db)):
     db.delete(card)
-    db.commit() 
+    db.commit()

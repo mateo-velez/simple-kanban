@@ -11,18 +11,21 @@ class CardColumn(str, Enum):
     DOING = "DOING"
     DONE = "DONE"
 
+
 # Input models
 class CardInCreate(BaseSchema):
     title: str
     description: str = ""
     column: CardColumn = CardColumn.BACKLOG
     labels: list[LabelColor] = []
-    
+
+
 class CardInUpdate(BaseSchema):
     title: str | None = None
     description: str | None = None
     column: CardColumn | None = None
     labels: list[LabelColor] | None = None
+
 
 # Output models
 class CardOut(BaseSchema):
