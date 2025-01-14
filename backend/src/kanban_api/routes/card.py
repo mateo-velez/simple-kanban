@@ -10,23 +10,21 @@ router = APIRouter(prefix="/cards", tags=["cards"], dependencies=[Depends(get_cu
 
 
 @router.get("/{card_id}", status_code=200)
-def get_card(
-    card: Card = Depends(get_card),
-) -> CardOut:
-    return card
+def get_card(card: Card = Depends(get_card)) -> CardOut:
+    return card  # type: ignore
 
 
 @router.patch("/{card_id}", status_code=200)
 def update_card(
     card_update: CardInUpdate, card: Card = Depends(get_card), db: Session = Depends(get_db)
 ) -> CardOut:
-    update_attributes(card, card_update.model_dump(exclude_unset=True, exclude=["labels"]))
+    update_attributes(card, card_update.model_dump(exclude_unset=True, exclude={"labels"}))
 
     if card_update.labels:
         card.labels = [label for label in card.board.labels if label.color in card_update.labels]
     db.commit()
     db.refresh(card)
-    return card
+    return card  # type: ignore
 
 
 @router.delete("/{card_id}", status_code=204)

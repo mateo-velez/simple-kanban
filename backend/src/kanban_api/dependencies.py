@@ -53,7 +53,8 @@ def get_board(
 
 
 def get_user(user_id: int, db: Session = Depends(get_db)) -> User:
-    user = db.get(User, user_id)
+    stmt = select(User).where(User.id == user_id)
+    user = db.execute(stmt).scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

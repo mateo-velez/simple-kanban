@@ -13,7 +13,7 @@ router = APIRouter(prefix="/boards", tags=["boards"], dependencies=[Depends(get_
 
 @router.get("", status_code=200)
 def list_boards(current_user: User = Depends(get_current_user)) -> list[BoardOut]:
-    return current_user.boards
+    return current_user.boards  # type: ignore
 
 
 @router.post("", status_code=201)
@@ -28,14 +28,12 @@ def create_board(
     db.add(board)
     db.commit()
     db.refresh(board)
-    return board
+    return board  # type: ignore
 
 
 @router.get("/{board_id}", status_code=200)
-def get_board(
-    board: Board = Depends(get_board),
-) -> BoardOut:
-    return board
+def get_board(board: Board = Depends(get_board)) -> BoardOut:
+    return board  # type: ignore
 
 
 @router.delete("/{board_id}", status_code=204)
@@ -58,7 +56,7 @@ def update_board(
 
     db.commit()
     db.refresh(board)
-    return board
+    return board  # type: ignore
 
 
 @router.post("/{board_id}/cards", status_code=201, dependencies=[Depends(get_board)])
@@ -68,14 +66,12 @@ def create_cards(
     cards = [{**card_create.model_dump(), "board_id": board_id} for card_create in cards_create]
     result = db.execute(insert(Card).returning(Card), cards).scalars()
     db.commit()
-    return result
+    return result  # type: ignore
 
 
 @router.get("/{board_id}/cards", status_code=200)
-def list_cards(
-    board=Depends(get_board),
-) -> list[CardOut]:
-    return board.cards
+def list_cards(board: Board = Depends(get_board)) -> list[CardOut]:
+    return board.cards  # type: ignore
 
 
 @router.put("/{board_id}/users/{user_id}", status_code=200)

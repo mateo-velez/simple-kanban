@@ -21,9 +21,9 @@ def create_user(user_create: UserInCreate, db: Session = Depends(get_db)) -> Use
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user
+    return user  # type: ignore
 
 
 @router.get("/me", status_code=200)
 def get_me(user: User = Depends(get_current_user)) -> UserOut:
-    return user
+    return user  # type: ignore
