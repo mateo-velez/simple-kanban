@@ -1,4 +1,3 @@
-from datetime import datetime
 from enum import Enum
 
 from kanban_api.schemas.base import BaseSchema
