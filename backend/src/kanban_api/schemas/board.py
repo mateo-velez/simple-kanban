@@ -12,6 +12,7 @@ class BoardInCreate(BaseSchema):
     description: str = ""
 
     @computed_field
+    @property
     def labels(self) -> list[LabelInCreate]:
         return [LabelInCreate(color=color) for color in LabelColor]
 

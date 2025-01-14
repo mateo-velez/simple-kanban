@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import insert, select
 from sqlalchemy.orm import Session
 
-from kanban_api.dependencies import get_board, get_current_user, get_db, get_user
+from kanban_api.dependencies import get_board, get_current_user, get_db, get_user  # type: ignore
 from kanban_api.models import Board, Card, Label, User, UserBoard
 from kanban_api.schemas.board import BoardInCreate, BoardInUpdate, BoardOut
 from kanban_api.schemas.card import CardInCreate, CardOut
@@ -46,7 +46,7 @@ def delete_board(board: Board = Depends(get_board), db: Session = Depends(get_db
 def update_board(
     board_update: BoardInUpdate, board: Board = Depends(get_board), db: Session = Depends(get_db)
 ) -> BoardOut:
-    update_attributes(board, board_update.model_dump(exclude_unset=True, exclude=["labels"]))
+    update_attributes(board, board_update.model_dump(exclude_unset=True, exclude={"labels"}))
 
     if board_update.labels:
         labels_update = {label_update.color: label_update for label_update in board_update.labels}

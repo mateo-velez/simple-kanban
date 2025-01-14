@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from kanban_api.dependencies import get_card, get_current_user, get_db
+from kanban_api.dependencies import get_card, get_current_user, get_db  # type: ignore
 from kanban_api.models import Card
 from kanban_api.schemas.card import CardInUpdate, CardOut
 from kanban_api.utils.attr import update_attributes
