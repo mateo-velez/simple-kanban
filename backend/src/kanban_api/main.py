@@ -4,10 +4,10 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-import kanban_api.models
 from kanban_api import __version__
 from kanban_api.config import settings
-from kanban_api.database import Base, engine
+from kanban_api.database import engine
+from kanban_api.models import Base
 from kanban_api.routes import auth, board, card, user
 
 
