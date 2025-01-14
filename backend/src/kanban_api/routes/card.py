@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
-from kanban_api.utils.attr import update_attributes
 from sqlalchemy.orm import Session
 
-from kanban_api.schemas.card import CardInUpdate, CardOut
-from kanban_api.dependencies import get_current_user, get_db, get_card
+from kanban_api.dependencies import get_card, get_current_user, get_db
 from kanban_api.models import Card
+from kanban_api.schemas.card import CardInUpdate, CardOut
+from kanban_api.utils.attr import update_attributes
 
 router = APIRouter(prefix="/cards", tags=["cards"], dependencies=[Depends(get_current_user)])
 
@@ -17,7 +17,9 @@ def get_card(
 
 
 @router.patch("/{card_id}", status_code=200)
-def update_card(card_update: CardInUpdate, card: Card = Depends(get_card), db: Session = Depends(get_db)) -> CardOut:
+def update_card(
+    card_update: CardInUpdate, card: Card = Depends(get_card), db: Session = Depends(get_db)
+) -> CardOut:
     update_attributes(card, card_update.model_dump(exclude_unset=True, exclude=["labels"]))
 
     if card_update.labels:

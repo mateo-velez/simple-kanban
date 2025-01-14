@@ -1,7 +1,9 @@
 from datetime import datetime
-from kanban_api.schemas.base import BaseSchema
-from kanban_api.schemas.label import LabelColor, LabelInCreate, LabelOut, LabelInUpdate
+
 from pydantic import computed_field
+
+from kanban_api.schemas.base import BaseSchema
+from kanban_api.schemas.label import LabelColor, LabelInCreate, LabelInUpdate, LabelOut
 
 
 # Input models

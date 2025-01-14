@@ -1,5 +1,6 @@
-from tests.conftest import auth_client, fake
 from fastapi.testclient import TestClient
+
+from tests.conftest import auth_client, fake
 
 
 def test_list_boards(auth_client: TestClient):

@@ -39,6 +39,7 @@ dev = [
     "isort",
     "flake8",
     "faker",
+    "flake8-pyproject",
 ]
 
 [tool.pytest.ini_options]
@@ -47,11 +48,23 @@ pythonpath = [
 ]
 
 [tool.black]
-line-length = 120
+line-length = 100
 target-version = ['py310']
 preview = true
 
 [tool.isort]
 profile = "black"
-line_length = 120
+line_length = 100
 multi_line_output = 3
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    ".venv",
+]

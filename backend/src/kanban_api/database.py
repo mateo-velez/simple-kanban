@@ -1,10 +1,14 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
 from kanban_api.config import settings
 
 # Configure connect_args based on DB_URL
 if settings.db_url.startswith("sqlite://"):
-    connect_args = {"check_same_thread": False, "uri": True}  # Enable URI parsing to allow for shared cache
+    connect_args = {
+        "check_same_thread": False,
+        "uri": True,
+    }  # Enable URI parsing to allow for shared cache
 else:
     connect_args = {}
 

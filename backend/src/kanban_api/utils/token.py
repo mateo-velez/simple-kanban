@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta, timezone
+
 import jwt
-from kanban_api.schemas.token import TokenData
+
 from kanban_api.config import settings
+from kanban_api.schemas.token import TokenData
 
 
 def create_access_token(data: TokenData, expires_delta: timedelta | None = None) -> str:

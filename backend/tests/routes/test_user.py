@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
-from tests.conftest import client, fake, auth_client
 
+from tests.conftest import auth_client, client, fake
 
 # test creat user status code and correct output
 # test create user existing email

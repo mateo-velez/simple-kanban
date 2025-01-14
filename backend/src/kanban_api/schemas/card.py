@@ -1,8 +1,10 @@
 from datetime import datetime
 from enum import Enum
+
+from pydantic import field_validator, validator
+
 from kanban_api.schemas.base import BaseSchema
 from kanban_api.schemas.label import LabelColor
-from pydantic import field_validator, validator
 
 
 class CardColumn(str, Enum):

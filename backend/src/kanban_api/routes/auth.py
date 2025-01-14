@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
-from sqlalchemy import select
 from datetime import timedelta
 
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from kanban_api.dependencies import get_db
-from kanban_api.schemas.token import Token, TokenData
 from kanban_api.models import User
-from kanban_api.utils import verify_password, create_access_token
+from kanban_api.schemas.token import Token, TokenData
+from kanban_api.utils import create_access_token, verify_password
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

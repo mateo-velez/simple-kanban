@@ -1,7 +1,9 @@
 import time
-import pytest
 from datetime import datetime, timedelta, timezone
-from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
+
+import pytest
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
+
 from kanban_api.schemas.token import TokenData
 from kanban_api.utils import create_access_token, decode_access_token
 
@@ -37,7 +39,9 @@ def test_expires_delta_one_microsecond_fails():
 
 
 def test_token_data_integrity():
-    token_data = TokenData(sub="1", email="test@example.com", exp=datetime.now(timezone.utc) + timedelta(hours=1))
+    token_data = TokenData(
+        sub="1", email="test@example.com", exp=datetime.now(timezone.utc) + timedelta(hours=1)
+    )
     token = create_access_token(token_data)
     decoded = decode_access_token(token)
     assert decoded is not None

@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from kanban_api.dependencies import get_board, get_current_user, get_db, get_user
+from kanban_api.models import Board, User, UserBoard
 from kanban_api.schemas.board import BoardInCreate, BoardOut
 from kanban_api.schemas.user import UserInCreate, UserOut
-from kanban_api.dependencies import get_board, get_db, get_current_user, get_user
-from kanban_api.models import Board, User, UserBoard
 
 router = APIRouter(prefix="/users", tags=["users"])
 

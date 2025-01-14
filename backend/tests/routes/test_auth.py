@@ -1,5 +1,6 @@
-from tests.conftest import client, fake
 from fastapi.testclient import TestClient
+
+from tests.conftest import client, fake
 
 
 def test_login_success(client: TestClient):
@@ -9,7 +10,9 @@ def test_login_success(client: TestClient):
     assert response.status_code == 201
 
     # login
-    response = client.post("/auth/tokens", data={"username": data["email"], "password": data["password"]})
+    response = client.post(
+        "/auth/tokens", data={"username": data["email"], "password": data["password"]}
+    )
     assert response.status_code == 200
 
 
@@ -18,10 +21,14 @@ def test_login_incorrect_password(client: TestClient):
     response = client.post("/users", json=data)
     assert response.status_code == 201
 
-    response = client.post("/auth/tokens", data={"username": data["email"], "password": "incorrect"})
+    response = client.post(
+        "/auth/tokens", data={"username": data["email"], "password": "incorrect"}
+    )
     assert response.status_code == 401
 
 
 def test_login_user_not_found(client: TestClient):
-    response = client.post("/auth/tokens", data={"username": "notfound@email.com", "password": "incorrect"})
+    response = client.post(
+        "/auth/tokens", data={"username": "notfound@email.com", "password": "incorrect"}
+    )
     assert response.status_code == 401

@@ -1,13 +1,16 @@
-from tests.conftest import auth_client, fake
 from fastapi.testclient import TestClient
 from pytest import fixture
+
 from kanban_api.schemas.label import LabelColor
+from tests.conftest import auth_client, fake
 
 
 @fixture()
 def populated_cards(auth_client: TestClient):
     print("populated_cards")
-    response = auth_client.post("/boards", json={"title": fake.sentence(), "description": fake.sentence()})
+    response = auth_client.post(
+        "/boards", json={"title": fake.sentence(), "description": fake.sentence()}
+    )
     assert response.status_code == 201
     board_id = response.json()["id"]
     data = [{"title": fake.sentence(), "description": fake.sentence()} for _ in range(3)]

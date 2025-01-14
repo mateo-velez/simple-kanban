@@ -1,4 +1,4 @@
-from kanban_api.utils import verify_password, get_password_hash
+from kanban_api.utils import get_password_hash, verify_password
 
 
 def test_hashed_is_str():

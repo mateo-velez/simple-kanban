@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from kanban_api.database import SessionLocal
-from kanban_api.models import Board, User, Card, Label, UserBoard
+from kanban_api.models import Board, Card, Label, User, UserBoard
 from kanban_api.utils import decode_access_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/tokens")
@@ -42,7 +42,9 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         )
 
 
-def get_board(board_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Board:
+def get_board(
+    board_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+) -> Board:
     stmt = select(Board).where(Board.id == board_id, Board.owners.contains(current_user))
     board = db.execute(stmt).scalar_one_or_none()
     if not board:
@@ -57,8 +59,15 @@ def get_user(user_id: int, db: Session = Depends(get_db)) -> User:
     return user
 
 
-def get_card(card_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Card:
-    stmt = select(Card).join(Board).join(UserBoard).where(Card.id == card_id, UserBoard.user_id == current_user.id)
+def get_card(
+    card_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+) -> Card:
+    stmt = (
+        select(Card)
+        .join(Board)
+        .join(UserBoard)
+        .where(Card.id == card_id, UserBoard.user_id == current_user.id)
+    )
     card = db.execute(stmt).scalar_one_or_none()
 
     if not card:

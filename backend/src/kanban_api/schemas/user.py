@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from pydantic import EmailStr, SecretStr, computed_field
+
 from kanban_api.schemas.base import BaseSchema
 from kanban_api.utils import get_password_hash
 

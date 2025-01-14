@@ -1,12 +1,14 @@
 from contextlib import asynccontextmanager
+
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from kanban_api import __version__
 from kanban_api.config import settings
-from kanban_api.database import engine, Base
+from kanban_api.database import Base, engine
 from kanban_api.models import *
-from kanban_api.routes import user, auth, board, card
+from kanban_api.routes import auth, board, card, user
 
 
 @asynccontextmanager
