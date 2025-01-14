@@ -7,6 +7,19 @@ from pytest import fixture
 fake = Faker()
 
 
+def get_random_accont_credentials(client: TestClient):
+    data = {"email": fake.email(), "password": fake.password()}
+    create_response = client.post("/users", json=data)
+    assert create_response.status_code == 201
+
+    token_response = client.post(
+        "/auth/tokens", data={"username": data["email"], "password": data["password"]}
+    )
+    assert token_response.status_code == 200
+    headers = {"Authorization": f"Bearer {token_response.json()['access_token']}"}
+    return create_response.json(), headers
+
+
 @fixture(scope="session")
 def client() -> Generator[TestClient, None, None]:
     from kanban_api.main import app
@@ -17,12 +30,6 @@ def client() -> Generator[TestClient, None, None]:
 
 @fixture(scope="session")
 def auth_client(client: TestClient) -> TestClient:
-    data = {"email": fake.email(), "password": fake.password()}
-    response = client.post("/users", json=data)
-    assert response.status_code == 201
-    response = client.post(
-        "/auth/tokens", data={"username": data["email"], "password": data["password"]}
-    )
-    assert response.status_code == 200
-    client.headers["Authorization"] = f"Bearer {response.json()['access_token']}"
+    _, headers = get_random_accont_credentials(client)
+    client.headers.update(headers)
     return client
