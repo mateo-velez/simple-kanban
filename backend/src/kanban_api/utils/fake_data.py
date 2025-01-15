@@ -3,7 +3,9 @@ from pathlib import Path
 
 from faker import Faker
 
-from kanban_api.models import *
+from kanban_api.models import Board, Card, Label, User
+from kanban_api.schemas.card import CardColumn
+from kanban_api.schemas.label import LabelColor
 from kanban_api.utils.password import get_password_hash
 
 
