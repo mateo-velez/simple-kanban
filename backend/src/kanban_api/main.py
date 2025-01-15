@@ -6,19 +6,26 @@ from fastapi.staticfiles import StaticFiles
 
 from kanban_api import __version__
 from kanban_api.config import settings
-from kanban_api.database import engine
+from kanban_api.database import SessionLocal, engine
 from kanban_api.models import Base
 from kanban_api.routes import auth, board, card, user
+from kanban_api.utils.fake_data import FakeData
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    if settings.drop_all:
+    if settings.drop_all or settings.populate_db:
         Base.metadata.drop_all(bind=engine)
 
     Base.metadata.create_all(bind=engine)
 
+    if settings.populate_db:
+        fake_data = FakeData()
+        users = fake_data.generate(num_users=10, num_boards=10, num_cards=100)
+        with SessionLocal() as session:
+            session.add_all(users)
+            session.commit()
     yield
     # after the app shuts down
 
