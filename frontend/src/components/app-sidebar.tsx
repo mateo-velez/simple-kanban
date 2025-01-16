@@ -24,7 +24,7 @@ export function AppSidebar() {
 
     const fetchUser = useCallback(async (config: Configuration) => {
         const userApi = new UsersApi(config);
-        return await userApi.getMeUsersMeGet();
+        return await userApi.getMeApiUsersMeGet();
     }, []);
 
     const { data: user } = useAuthClient(fetchUser);

@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/AuthApi.ts
 apis/BoardsApi.ts
 apis/CardsApi.ts
@@ -19,7 +18,10 @@ models/LabelInUpdate.ts
 models/LabelOut.ts
 models/Token.ts
 models/UserInCreate.ts
+models/UserInSearch.ts
+models/UserInUpdate.ts
 models/UserOut.ts
+models/UserOutPublic.ts
 models/ValidationError.ts
 models/ValidationErrorLocInner.ts
 models/index.ts

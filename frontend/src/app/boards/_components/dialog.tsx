@@ -50,7 +50,7 @@ const AddBoardContent = ({
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const boardApi = new BoardsApi(getConfig());
-            const response = await boardApi.createBoardBoardsPost({
+            const response = await boardApi.createBoardApiBoardsPost({
                 boardInCreate: {
                     title: values.title,
                 },

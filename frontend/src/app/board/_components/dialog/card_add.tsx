@@ -54,7 +54,7 @@ export const AddCardForm = ({
     // Handle form submission
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            const response = await boardApi.createCardsBoardsBoardIdCardsPost({
+            const response = await boardApi.createCardsApiBoardsBoardIdCardsPost({
                 boardId: metadata.boardId,
                 cardInCreate: [
                     {

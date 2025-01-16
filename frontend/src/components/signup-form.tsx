@@ -49,7 +49,7 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const usersApi = new UsersApi(getConfig());
         try {
-            const response = await usersApi.createUserUsersPost({
+            const response = await usersApi.createUserApiUsersPost({
                 userInCreate: {
                     email: values.email,
                     password: values.password,

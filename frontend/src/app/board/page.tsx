@@ -28,8 +28,8 @@ function BoardContent() {
         async (config: Configuration) => {
             const boardsApi = new BoardsApi(config);
             const [board, cards] = await Promise.all([
-                boardsApi.getBoardBoardsBoardIdGet({ boardId: boardId }),
-                boardsApi.listCardsBoardsBoardIdCardsGet({ boardId: boardId }),
+                boardsApi.getBoardApiBoardsBoardIdGet({ boardId: boardId }),
+                boardsApi.listCardsApiBoardsBoardIdCardsGet({ boardId: boardId }),
             ]);
             return { board, cards };
         },

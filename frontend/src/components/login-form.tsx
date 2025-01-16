@@ -44,7 +44,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const authApi = new AuthApi(getConfig());
         try {
-            const token = await authApi.loginAuthTokensPost({
+            const token = await authApi.loginApiAuthTokensPost({
                 username: values.email,
                 password: values.password,
             });

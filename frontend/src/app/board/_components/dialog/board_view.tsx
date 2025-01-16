@@ -204,7 +204,7 @@ export const ViewBoardDialog = ({
         }
 
         try {
-            const board = await boardsApi.updateBoardBoardsBoardIdPatch({
+            const board = await boardsApi.updateBoardApiBoardsBoardIdPatch({
                 boardId: metadata.board.id,
                 boardInUpdate: patch,
             });
@@ -233,7 +233,7 @@ export const ViewBoardDialog = ({
 
     const handleDelete = async () => {
         try {
-            await boardsApi.deleteBoardBoardsBoardIdDelete({
+            await boardsApi.deleteBoardApiBoardsBoardIdDelete({
                 boardId: metadata.board.id,
             });
 

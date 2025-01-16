@@ -302,7 +302,7 @@ export const ViewDialog = ({
         }
 
         try {
-            const response = await cardsApi.updateCardCardsCardIdPatch({
+            const response = await cardsApi.updateCardApiCardsCardIdPatch({
                 cardId: metadata.card.id,
                 cardInUpdate: patch,
             });
@@ -333,7 +333,7 @@ export const ViewDialog = ({
 
     const handleDelete = async () => {
         try {
-            await cardsApi.deleteCardCardsCardIdDelete({
+            await cardsApi.deleteCardApiCardsCardIdDelete({
                 cardId: metadata.card.id,
             });
 

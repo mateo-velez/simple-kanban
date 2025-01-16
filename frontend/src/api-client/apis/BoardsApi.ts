@@ -21,6 +21,7 @@ import type {
   CardInCreate,
   CardOut,
   HTTPValidationError,
+  UserOutPublic,
 } from '../models/index';
 import {
     BoardInCreateFromJSON,
@@ -35,40 +36,46 @@ import {
     CardOutToJSON,
     HTTPValidationErrorFromJSON,
     HTTPValidationErrorToJSON,
+    UserOutPublicFromJSON,
+    UserOutPublicToJSON,
 } from '../models/index';
 
-export interface CreateBoardBoardsPostRequest {
+export interface CreateBoardApiBoardsPostRequest {
     boardInCreate: BoardInCreate;
 }
 
-export interface CreateCardsBoardsBoardIdCardsPostRequest {
+export interface CreateCardsApiBoardsBoardIdCardsPostRequest {
     boardId: number;
     cardInCreate: Array<CardInCreate>;
 }
 
-export interface DeleteBoardBoardsBoardIdDeleteRequest {
+export interface DeleteBoardApiBoardsBoardIdDeleteRequest {
     boardId: number;
 }
 
-export interface GetBoardBoardsBoardIdGetRequest {
+export interface GetBoardApiBoardsBoardIdGetRequest {
     boardId: number;
 }
 
-export interface ListCardsBoardsBoardIdCardsGetRequest {
+export interface ListCardsApiBoardsBoardIdCardsGetRequest {
     boardId: number;
 }
 
-export interface ShareBoardBoardsBoardIdUsersUserIdPutRequest {
+export interface ListUsersApiBoardsBoardIdUsersGetRequest {
+    boardId: number;
+}
+
+export interface ShareBoardApiBoardsBoardIdUsersUserIdPutRequest {
     userId: number;
     boardId: number;
 }
 
-export interface UnshareBoardBoardsBoardIdUsersUserIdDeleteRequest {
+export interface UnshareBoardApiBoardsBoardIdUsersUserIdDeleteRequest {
     userId: number;
     boardId: number;
 }
 
-export interface UpdateBoardBoardsBoardIdPatchRequest {
+export interface UpdateBoardApiBoardsBoardIdPatchRequest {
     boardId: number;
     boardInUpdate: BoardInUpdate;
 }
@@ -81,11 +88,11 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Create Board
      */
-    async createBoardBoardsPostRaw(requestParameters: CreateBoardBoardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BoardOut>> {
+    async createBoardApiBoardsPostRaw(requestParameters: CreateBoardApiBoardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BoardOut>> {
         if (requestParameters['boardInCreate'] == null) {
             throw new runtime.RequiredError(
                 'boardInCreate',
-                'Required parameter "boardInCreate" was null or undefined when calling createBoardBoardsPost().'
+                'Required parameter "boardInCreate" was null or undefined when calling createBoardApiBoardsPost().'
             );
         }
 
@@ -101,7 +108,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards`,
+            path: `/api/boards`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -114,26 +121,26 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Create Board
      */
-    async createBoardBoardsPost(requestParameters: CreateBoardBoardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BoardOut> {
-        const response = await this.createBoardBoardsPostRaw(requestParameters, initOverrides);
+    async createBoardApiBoardsPost(requestParameters: CreateBoardApiBoardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BoardOut> {
+        const response = await this.createBoardApiBoardsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Create Cards
      */
-    async createCardsBoardsBoardIdCardsPostRaw(requestParameters: CreateCardsBoardsBoardIdCardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CardOut>>> {
+    async createCardsApiBoardsBoardIdCardsPostRaw(requestParameters: CreateCardsApiBoardsBoardIdCardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CardOut>>> {
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling createCardsBoardsBoardIdCardsPost().'
+                'Required parameter "boardId" was null or undefined when calling createCardsApiBoardsBoardIdCardsPost().'
             );
         }
 
         if (requestParameters['cardInCreate'] == null) {
             throw new runtime.RequiredError(
                 'cardInCreate',
-                'Required parameter "cardInCreate" was null or undefined when calling createCardsBoardsBoardIdCardsPost().'
+                'Required parameter "cardInCreate" was null or undefined when calling createCardsApiBoardsBoardIdCardsPost().'
             );
         }
 
@@ -149,7 +156,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}/cards`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}/cards`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -162,19 +169,19 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Create Cards
      */
-    async createCardsBoardsBoardIdCardsPost(requestParameters: CreateCardsBoardsBoardIdCardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CardOut>> {
-        const response = await this.createCardsBoardsBoardIdCardsPostRaw(requestParameters, initOverrides);
+    async createCardsApiBoardsBoardIdCardsPost(requestParameters: CreateCardsApiBoardsBoardIdCardsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CardOut>> {
+        const response = await this.createCardsApiBoardsBoardIdCardsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Delete Board
      */
-    async deleteBoardBoardsBoardIdDeleteRaw(requestParameters: DeleteBoardBoardsBoardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteBoardApiBoardsBoardIdDeleteRaw(requestParameters: DeleteBoardApiBoardsBoardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling deleteBoardBoardsBoardIdDelete().'
+                'Required parameter "boardId" was null or undefined when calling deleteBoardApiBoardsBoardIdDelete().'
             );
         }
 
@@ -188,7 +195,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -200,18 +207,18 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Delete Board
      */
-    async deleteBoardBoardsBoardIdDelete(requestParameters: DeleteBoardBoardsBoardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.deleteBoardBoardsBoardIdDeleteRaw(requestParameters, initOverrides);
+    async deleteBoardApiBoardsBoardIdDelete(requestParameters: DeleteBoardApiBoardsBoardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteBoardApiBoardsBoardIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      * Get Board
      */
-    async getBoardBoardsBoardIdGetRaw(requestParameters: GetBoardBoardsBoardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BoardOut>> {
+    async getBoardApiBoardsBoardIdGetRaw(requestParameters: GetBoardApiBoardsBoardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BoardOut>> {
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling getBoardBoardsBoardIdGet().'
+                'Required parameter "boardId" was null or undefined when calling getBoardApiBoardsBoardIdGet().'
             );
         }
 
@@ -225,7 +232,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -237,15 +244,15 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Get Board
      */
-    async getBoardBoardsBoardIdGet(requestParameters: GetBoardBoardsBoardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BoardOut> {
-        const response = await this.getBoardBoardsBoardIdGetRaw(requestParameters, initOverrides);
+    async getBoardApiBoardsBoardIdGet(requestParameters: GetBoardApiBoardsBoardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BoardOut> {
+        const response = await this.getBoardApiBoardsBoardIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * List Boards
      */
-    async listBoardsBoardsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BoardOut>>> {
+    async listBoardsApiBoardsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BoardOut>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -256,7 +263,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards`,
+            path: `/api/boards`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -268,19 +275,19 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * List Boards
      */
-    async listBoardsBoardsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BoardOut>> {
-        const response = await this.listBoardsBoardsGetRaw(initOverrides);
+    async listBoardsApiBoardsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BoardOut>> {
+        const response = await this.listBoardsApiBoardsGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * List Cards
      */
-    async listCardsBoardsBoardIdCardsGetRaw(requestParameters: ListCardsBoardsBoardIdCardsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CardOut>>> {
+    async listCardsApiBoardsBoardIdCardsGetRaw(requestParameters: ListCardsApiBoardsBoardIdCardsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CardOut>>> {
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling listCardsBoardsBoardIdCardsGet().'
+                'Required parameter "boardId" was null or undefined when calling listCardsApiBoardsBoardIdCardsGet().'
             );
         }
 
@@ -294,7 +301,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}/cards`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}/cards`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -306,26 +313,19 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * List Cards
      */
-    async listCardsBoardsBoardIdCardsGet(requestParameters: ListCardsBoardsBoardIdCardsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CardOut>> {
-        const response = await this.listCardsBoardsBoardIdCardsGetRaw(requestParameters, initOverrides);
+    async listCardsApiBoardsBoardIdCardsGet(requestParameters: ListCardsApiBoardsBoardIdCardsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CardOut>> {
+        const response = await this.listCardsApiBoardsBoardIdCardsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Share Board
+     * List Users
      */
-    async shareBoardBoardsBoardIdUsersUserIdPutRaw(requestParameters: ShareBoardBoardsBoardIdUsersUserIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<any>> {
-        if (requestParameters['userId'] == null) {
-            throw new runtime.RequiredError(
-                'userId',
-                'Required parameter "userId" was null or undefined when calling shareBoardBoardsBoardIdUsersUserIdPut().'
-            );
-        }
-
+    async listUsersApiBoardsBoardIdUsersGetRaw(requestParameters: ListUsersApiBoardsBoardIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserOutPublic>>> {
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling shareBoardBoardsBoardIdUsersUserIdPut().'
+                'Required parameter "boardId" was null or undefined when calling listUsersApiBoardsBoardIdUsersGet().'
             );
         }
 
@@ -339,7 +339,52 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}/users/{user_id}`.replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))).replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}/users`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserOutPublicFromJSON));
+    }
+
+    /**
+     * List Users
+     */
+    async listUsersApiBoardsBoardIdUsersGet(requestParameters: ListUsersApiBoardsBoardIdUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserOutPublic>> {
+        const response = await this.listUsersApiBoardsBoardIdUsersGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Share Board
+     */
+    async shareBoardApiBoardsBoardIdUsersUserIdPutRaw(requestParameters: ShareBoardApiBoardsBoardIdUsersUserIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<any>> {
+        if (requestParameters['userId'] == null) {
+            throw new runtime.RequiredError(
+                'userId',
+                'Required parameter "userId" was null or undefined when calling shareBoardApiBoardsBoardIdUsersUserIdPut().'
+            );
+        }
+
+        if (requestParameters['boardId'] == null) {
+            throw new runtime.RequiredError(
+                'boardId',
+                'Required parameter "boardId" was null or undefined when calling shareBoardApiBoardsBoardIdUsersUserIdPut().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            // oauth required
+            headerParameters["Authorization"] = await this.configuration.accessToken("OAuth2PasswordBearer", []);
+        }
+
+        const response = await this.request({
+            path: `/api/boards/{board_id}/users/{user_id}`.replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))).replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -355,26 +400,26 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Share Board
      */
-    async shareBoardBoardsBoardIdUsersUserIdPut(requestParameters: ShareBoardBoardsBoardIdUsersUserIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<any> {
-        const response = await this.shareBoardBoardsBoardIdUsersUserIdPutRaw(requestParameters, initOverrides);
+    async shareBoardApiBoardsBoardIdUsersUserIdPut(requestParameters: ShareBoardApiBoardsBoardIdUsersUserIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<any> {
+        const response = await this.shareBoardApiBoardsBoardIdUsersUserIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Unshare Board
      */
-    async unshareBoardBoardsBoardIdUsersUserIdDeleteRaw(requestParameters: UnshareBoardBoardsBoardIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async unshareBoardApiBoardsBoardIdUsersUserIdDeleteRaw(requestParameters: UnshareBoardApiBoardsBoardIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['userId'] == null) {
             throw new runtime.RequiredError(
                 'userId',
-                'Required parameter "userId" was null or undefined when calling unshareBoardBoardsBoardIdUsersUserIdDelete().'
+                'Required parameter "userId" was null or undefined when calling unshareBoardApiBoardsBoardIdUsersUserIdDelete().'
             );
         }
 
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling unshareBoardBoardsBoardIdUsersUserIdDelete().'
+                'Required parameter "boardId" was null or undefined when calling unshareBoardApiBoardsBoardIdUsersUserIdDelete().'
             );
         }
 
@@ -388,7 +433,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}/users/{user_id}`.replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))).replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}/users/{user_id}`.replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))).replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -400,25 +445,25 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Unshare Board
      */
-    async unshareBoardBoardsBoardIdUsersUserIdDelete(requestParameters: UnshareBoardBoardsBoardIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.unshareBoardBoardsBoardIdUsersUserIdDeleteRaw(requestParameters, initOverrides);
+    async unshareBoardApiBoardsBoardIdUsersUserIdDelete(requestParameters: UnshareBoardApiBoardsBoardIdUsersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.unshareBoardApiBoardsBoardIdUsersUserIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      * Update Board
      */
-    async updateBoardBoardsBoardIdPatchRaw(requestParameters: UpdateBoardBoardsBoardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BoardOut>> {
+    async updateBoardApiBoardsBoardIdPatchRaw(requestParameters: UpdateBoardApiBoardsBoardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BoardOut>> {
         if (requestParameters['boardId'] == null) {
             throw new runtime.RequiredError(
                 'boardId',
-                'Required parameter "boardId" was null or undefined when calling updateBoardBoardsBoardIdPatch().'
+                'Required parameter "boardId" was null or undefined when calling updateBoardApiBoardsBoardIdPatch().'
             );
         }
 
         if (requestParameters['boardInUpdate'] == null) {
             throw new runtime.RequiredError(
                 'boardInUpdate',
-                'Required parameter "boardInUpdate" was null or undefined when calling updateBoardBoardsBoardIdPatch().'
+                'Required parameter "boardInUpdate" was null or undefined when calling updateBoardApiBoardsBoardIdPatch().'
             );
         }
 
@@ -434,7 +479,7 @@ export class BoardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/boards/{board_id}`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
+            path: `/api/boards/{board_id}`.replace(`{${"board_id"}}`, encodeURIComponent(String(requestParameters['boardId']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -447,8 +492,8 @@ export class BoardsApi extends runtime.BaseAPI {
     /**
      * Update Board
      */
-    async updateBoardBoardsBoardIdPatch(requestParameters: UpdateBoardBoardsBoardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BoardOut> {
-        const response = await this.updateBoardBoardsBoardIdPatchRaw(requestParameters, initOverrides);
+    async updateBoardApiBoardsBoardIdPatch(requestParameters: UpdateBoardApiBoardsBoardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BoardOut> {
+        const response = await this.updateBoardApiBoardsBoardIdPatchRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

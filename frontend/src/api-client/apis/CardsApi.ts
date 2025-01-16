@@ -28,15 +28,15 @@ import {
     HTTPValidationErrorToJSON,
 } from '../models/index';
 
-export interface DeleteCardCardsCardIdDeleteRequest {
+export interface DeleteCardApiCardsCardIdDeleteRequest {
     cardId: number;
 }
 
-export interface GetCardCardsCardIdGetRequest {
+export interface GetCardApiCardsCardIdGetRequest {
     cardId: number;
 }
 
-export interface UpdateCardCardsCardIdPatchRequest {
+export interface UpdateCardApiCardsCardIdPatchRequest {
     cardId: number;
     cardInUpdate: CardInUpdate;
 }
@@ -49,11 +49,11 @@ export class CardsApi extends runtime.BaseAPI {
     /**
      * Delete Card
      */
-    async deleteCardCardsCardIdDeleteRaw(requestParameters: DeleteCardCardsCardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteCardApiCardsCardIdDeleteRaw(requestParameters: DeleteCardApiCardsCardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['cardId'] == null) {
             throw new runtime.RequiredError(
                 'cardId',
-                'Required parameter "cardId" was null or undefined when calling deleteCardCardsCardIdDelete().'
+                'Required parameter "cardId" was null or undefined when calling deleteCardApiCardsCardIdDelete().'
             );
         }
 
@@ -67,7 +67,7 @@ export class CardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/cards/{card_id}`.replace(`{${"card_id"}}`, encodeURIComponent(String(requestParameters['cardId']))),
+            path: `/api/cards/{card_id}`.replace(`{${"card_id"}}`, encodeURIComponent(String(requestParameters['cardId']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -79,18 +79,18 @@ export class CardsApi extends runtime.BaseAPI {
     /**
      * Delete Card
      */
-    async deleteCardCardsCardIdDelete(requestParameters: DeleteCardCardsCardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.deleteCardCardsCardIdDeleteRaw(requestParameters, initOverrides);
+    async deleteCardApiCardsCardIdDelete(requestParameters: DeleteCardApiCardsCardIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteCardApiCardsCardIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
      * Get Card
      */
-    async getCardCardsCardIdGetRaw(requestParameters: GetCardCardsCardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CardOut>> {
+    async getCardApiCardsCardIdGetRaw(requestParameters: GetCardApiCardsCardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CardOut>> {
         if (requestParameters['cardId'] == null) {
             throw new runtime.RequiredError(
                 'cardId',
-                'Required parameter "cardId" was null or undefined when calling getCardCardsCardIdGet().'
+                'Required parameter "cardId" was null or undefined when calling getCardApiCardsCardIdGet().'
             );
         }
 
@@ -104,7 +104,7 @@ export class CardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/cards/{card_id}`.replace(`{${"card_id"}}`, encodeURIComponent(String(requestParameters['cardId']))),
+            path: `/api/cards/{card_id}`.replace(`{${"card_id"}}`, encodeURIComponent(String(requestParameters['cardId']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -116,26 +116,26 @@ export class CardsApi extends runtime.BaseAPI {
     /**
      * Get Card
      */
-    async getCardCardsCardIdGet(requestParameters: GetCardCardsCardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CardOut> {
-        const response = await this.getCardCardsCardIdGetRaw(requestParameters, initOverrides);
+    async getCardApiCardsCardIdGet(requestParameters: GetCardApiCardsCardIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CardOut> {
+        const response = await this.getCardApiCardsCardIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Update Card
      */
-    async updateCardCardsCardIdPatchRaw(requestParameters: UpdateCardCardsCardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CardOut>> {
+    async updateCardApiCardsCardIdPatchRaw(requestParameters: UpdateCardApiCardsCardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CardOut>> {
         if (requestParameters['cardId'] == null) {
             throw new runtime.RequiredError(
                 'cardId',
-                'Required parameter "cardId" was null or undefined when calling updateCardCardsCardIdPatch().'
+                'Required parameter "cardId" was null or undefined when calling updateCardApiCardsCardIdPatch().'
             );
         }
 
         if (requestParameters['cardInUpdate'] == null) {
             throw new runtime.RequiredError(
                 'cardInUpdate',
-                'Required parameter "cardInUpdate" was null or undefined when calling updateCardCardsCardIdPatch().'
+                'Required parameter "cardInUpdate" was null or undefined when calling updateCardApiCardsCardIdPatch().'
             );
         }
 
@@ -151,7 +151,7 @@ export class CardsApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/cards/{card_id}`.replace(`{${"card_id"}}`, encodeURIComponent(String(requestParameters['cardId']))),
+            path: `/api/cards/{card_id}`.replace(`{${"card_id"}}`, encodeURIComponent(String(requestParameters['cardId']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -164,8 +164,8 @@ export class CardsApi extends runtime.BaseAPI {
     /**
      * Update Card
      */
-    async updateCardCardsCardIdPatch(requestParameters: UpdateCardCardsCardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CardOut> {
-        const response = await this.updateCardCardsCardIdPatchRaw(requestParameters, initOverrides);
+    async updateCardApiCardsCardIdPatch(requestParameters: UpdateCardApiCardsCardIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CardOut> {
+        const response = await this.updateCardApiCardsCardIdPatchRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

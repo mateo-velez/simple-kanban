@@ -25,7 +25,7 @@ import {
     TokenToJSON,
 } from '../models/index';
 
-export interface LoginAuthTokensPostRequest {
+export interface LoginApiAuthTokensPostRequest {
     username: string;
     password: string;
     grantType?: string | null;
@@ -42,18 +42,18 @@ export class AuthApi extends runtime.BaseAPI {
     /**
      * Login
      */
-    async loginAuthTokensPostRaw(requestParameters: LoginAuthTokensPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Token>> {
+    async loginApiAuthTokensPostRaw(requestParameters: LoginApiAuthTokensPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Token>> {
         if (requestParameters['username'] == null) {
             throw new runtime.RequiredError(
                 'username',
-                'Required parameter "username" was null or undefined when calling loginAuthTokensPost().'
+                'Required parameter "username" was null or undefined when calling loginApiAuthTokensPost().'
             );
         }
 
         if (requestParameters['password'] == null) {
             throw new runtime.RequiredError(
                 'password',
-                'Required parameter "password" was null or undefined when calling loginAuthTokensPost().'
+                'Required parameter "password" was null or undefined when calling loginApiAuthTokensPost().'
             );
         }
 
@@ -100,7 +100,7 @@ export class AuthApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/auth/tokens`,
+            path: `/api/auth/tokens`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -113,8 +113,8 @@ export class AuthApi extends runtime.BaseAPI {
     /**
      * Login
      */
-    async loginAuthTokensPost(requestParameters: LoginAuthTokensPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Token> {
-        const response = await this.loginAuthTokensPostRaw(requestParameters, initOverrides);
+    async loginApiAuthTokensPost(requestParameters: LoginApiAuthTokensPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Token> {
+        const response = await this.loginApiAuthTokensPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

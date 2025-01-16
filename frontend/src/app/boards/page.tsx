@@ -11,7 +11,7 @@ import { BoardsApi, Configuration } from "@/api-client";
 export default function HomePage() {
     const fetchBoards = useCallback(async (config: Configuration) => {
         const boardsApi = new BoardsApi(config);
-        return await boardsApi.listBoardsBoardsGet();
+        return await boardsApi.listBoardsApiBoardsGet();
     }, []);
 
     const { data: boards, setData: setBoards } = useAuthClient(fetchBoards);
