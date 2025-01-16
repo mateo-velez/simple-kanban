@@ -17,7 +17,7 @@ def get_random_accont_credentials(client: TestClient):
     )
     assert token_response.status_code == 200
     headers = {"Authorization": f"Bearer {token_response.json()['access_token']}"}
-    return create_response.json(), headers
+    return {**create_response.json(), "password": data["password"]}, headers
 
 
 @fixture(scope="session")
