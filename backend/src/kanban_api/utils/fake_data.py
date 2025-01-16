@@ -12,13 +12,17 @@ from kanban_api.utils.password import get_password_hash
 class FakeData:
     def __init__(self):
         self.fake = Faker()
+        self.user_count = 0
 
         with open(Path(__file__).parent / "sample.md", "r") as file:
             self.markdown = file.read()
 
     def user(self, **kwargs):
+        self.user_count += 1
         return User(
-            email=self.fake.email(), hashed_password=get_password_hash("password"), **kwargs
+            email=f"user{self.user_count}@example.com",
+            hashed_password=get_password_hash("password"),
+            **kwargs,
         )
 
     def board(self, owners: list[User], **kwargs):

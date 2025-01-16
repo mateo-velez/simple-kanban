@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
 
     if settings.populate_db:
         fake_data = FakeData()
-        users = fake_data.generate(num_users=10, num_boards=10, num_cards=100)
+        users = fake_data.generate(num_users=7, num_boards=28, num_cards=600)
         with SessionLocal() as session:
             session.add_all(users)
             session.commit()
