@@ -60,7 +60,7 @@ const Title = ({ form }: { form: any }) => {
         );
     }
     return (
-        <div className="text-2xl font-bold" onClick={() => setIsTitleEditable(true)}>
+        <div className="text-lg font-bold" onClick={() => setIsTitleEditable(true)}>
             {form.watch("title")}
         </div>
     );
@@ -79,12 +79,12 @@ const Description = ({ form }: { form: any }) => {
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                     <SquarePen className="w-4 h-4" />
-                    <span className="font-bold">Description</span>
+                    <span className="font-bold text-md">Description</span>
                 </div>
                 <div className="flex flex-col gap-2">
                     <ScrollArea className="h-full">
                         <Textarea
-                            className="h-48"
+                            className="h-64"
                             {...form.register("description")}
                             onBlur={(e) => handleBlur(e.target.value)}
                             autoFocus
@@ -104,7 +104,7 @@ const Description = ({ form }: { form: any }) => {
                 onClick={() => setIsDescriptionEditable(true)}
                 className="flex flex-col gap-2 border rounded-md p-2"
             >
-                <ScrollArea className="h-48">
+                <ScrollArea className="h-64">
                     <MarkdownRenderer content={form.watch("description")} />
                 </ScrollArea>
             </div>
@@ -124,7 +124,7 @@ const Label = ({ label, form, index }: { label: LabelOut; form: any; index: numb
 
     return (
         <div
-            className="flex flex-col gap-2 p-2 rounded-md border items-center justify-center"
+            className="flex p-1 rounded-md border items-center justify-center"
             style={{ backgroundColor: label.color }}
         >
             {isEditing ? (
@@ -136,7 +136,7 @@ const Label = ({ label, form, index }: { label: LabelOut; form: any; index: numb
                 />
             ) : (
                 <div
-                    className="h-4 w-full font-bold cursor-pointer text-sm text-white"
+                    className="flex items-center justify-center h-full min-w-10 w-full font-bold cursor-pointer text-sm text-white"
                     onClick={() => setIsEditing(true)}
                 >
                     {label.name || ""}
@@ -150,9 +150,9 @@ const Labels = ({ form }: { form: any }) => {
     return (
         <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-                <span className="font-bold">Labels</span>
+                <span className="text-md font-bold">Labels</span>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex flex-wrap gap-2">
                 {form.watch("labels").map((label: LabelOut, index: number) => (
                     <Label key={label.color} label={label} form={form} index={index} />
                 ))}
@@ -168,7 +168,7 @@ export const ViewBoardDialog = ({
 }: {
     metadata: BoardView;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    setData: Dispatch<SetStateAction<Data>>;
+    setData: Dispatch<SetStateAction<Data | null>>;
 }) => {
     const { toast } = useToast();
     const boardsApi = new BoardsApi(getConfig());
@@ -199,7 +199,6 @@ export const ViewBoardDialog = ({
             labels: values.labels !== metadata.board.labels ? values.labels : undefined,
         };
 
-        console.log(patch);
         if (Object.values(patch).every((value) => value === undefined)) {
             return;
         }
@@ -215,10 +214,13 @@ export const ViewBoardDialog = ({
                 description: "Board updated successfully",
             });
 
-            setData((prev) => ({
-                ...prev,
-                board: board,
-            }));
+            setData(
+                (prev) =>
+                    prev && {
+                        ...prev,
+                        board: board,
+                    }
+            );
         } catch (error) {
             toast({
                 title: "Update failed",
@@ -251,7 +253,7 @@ export const ViewBoardDialog = ({
     };
 
     return (
-        <DialogContent>
+        <DialogContent className="w-full max-w-2xl max-h-screen">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <DialogHeader>

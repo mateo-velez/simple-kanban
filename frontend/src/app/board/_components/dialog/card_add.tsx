@@ -32,7 +32,7 @@ export const AddCardForm = ({
     setOpen,
 }: {
     metadata: CardAdd;
-    setData: Dispatch<SetStateAction<Data>>;
+    setData: Dispatch<SetStateAction<Data | null>>;
     setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
     const { toast } = useToast();
@@ -64,10 +64,13 @@ export const AddCardForm = ({
             });
 
             // Update the state with the actual response
-            setData((prevData: Data) => ({
-                board: prevData.board,
-                cards: [...prevData.cards, response[0]],
-            }));
+            setData(
+                (prev) =>
+                    prev && {
+                        ...prev,
+                        cards: [...prev.cards, response[0]],
+                    }
+            );
 
             toast({
                 title: "Card created",

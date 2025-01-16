@@ -12,8 +12,8 @@ import { SetStateAction } from "react";
 const Column = ({ title, children }: { title: string; children: React.ReactNode }) => {
     return (
         <div className="w-full h-fit max-h-full flex flex-col gap-2 bg-card rounded-lg border shadow-md">
-            <div className="p-4 border-b flex-none -mb-1">
-                <h2 className="text-xl font-semibold text-card-foreground">{title}</h2>
+            <div className="p-2 border-b flex justify-center bg-card-foreground rounded-t-lg -mb-1">
+                <h2 className="text-lg font-semibold text-card">{title}</h2>
             </div>
             <ScrollArea className="max-h-full flex p-2">
                 <div className="flex flex-col gap-2">{children}</div>
@@ -26,8 +26,8 @@ const Column = ({ title, children }: { title: string; children: React.ReactNode 
 const Backlog = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="h-full flex flex-col rounded-lg border bg-card m-4">
-            <div className="p-4 border-b">
-                <h2 className="text-xl font-semibold text-card-foreground text-center">Backlog</h2>
+            <div className="p-2 border-b bg-card-foreground rounded-t-lg">
+                <h2 className="text-lg font-semibold text-card text-center">BACKLOG</h2>
             </div>
             <ScrollArea className="h-fit max-h-full ">
                 <div className="grid grid-cols-3 gap-4 p-4">{children}</div>
@@ -56,6 +56,8 @@ export const RezizableBoard = ({
                                     card={card}
                                     board={data.board}
                                     setMetadata={setMetadata}
+                                    className="border-2 border-card-foreground/25"
+                                    N={120}
                                 />
                             ))}
                     </Column>
@@ -66,7 +68,11 @@ export const RezizableBoard = ({
 
             <ResizablePanel className="h-full">
                 <Backlog>
-                    <AddCard boardId={data.board.id} setMetadata={setMetadata} />
+                    <AddCard
+                        boardId={data.board.id}
+                        setMetadata={setMetadata}
+                        className="border-2 border-card-foreground/25 h-full min-h-16"
+                    />
                     {data.cards
                         .filter((card) => card.column === CardColumn.Backlog)
                         .map((card) => (
@@ -75,6 +81,8 @@ export const RezizableBoard = ({
                                 card={card}
                                 board={data.board}
                                 setMetadata={setMetadata}
+                                className="border-2 border-card-foreground/25 h-full min-h-16"
+                                N={70}
                             />
                         ))}
                 </Backlog>

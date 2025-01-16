@@ -1,5 +1,3 @@
-import { BoardOut } from "@/api-client/models/BoardOut";
-import { CardOut } from "@/api-client/models/CardOut";
 import { Dialog } from "@/components/ui/dialog";
 import { DefaultDialog } from "./default";
 import { AddCardForm } from "./card_add";
@@ -8,7 +6,6 @@ import { ViewBoardDialog } from "./board_view";
 import { Data, Metadata } from "../interfaces";
 import { SetStateAction } from "react";
 import { Dispatch } from "react";
-import { Button } from "@/components/ui/button";
 
 const DialogContentSwitch = ({
     metadata,
@@ -17,7 +14,7 @@ const DialogContentSwitch = ({
 }: {
     metadata: Metadata;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    setData: Dispatch<SetStateAction<Data>>;
+    setData: Dispatch<SetStateAction<Data | null>>;
 }) => {
     switch (metadata.type) {
         case "card_add":
@@ -40,7 +37,7 @@ export const DialogRoot = ({
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    setData: Dispatch<SetStateAction<Data>>;
+    setData: Dispatch<SetStateAction<Data | null>>;
     metadata: Metadata;
     children: React.ReactNode;
 }) => {

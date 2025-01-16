@@ -25,19 +25,20 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+
+const formSchema = z.object({
+    title: z.string().min(1, { message: "Title is required" }),
+});
 
 const AddBoardContent = ({
     setOpen,
     setBoards,
 }: {
     setOpen: (open: boolean) => void;
-    setBoards: React.Dispatch<React.SetStateAction<BoardOut[]>>;
+    setBoards: React.Dispatch<React.SetStateAction<BoardOut[] | null>>;
 }) => {
-    const boardApi = new BoardsApi(getConfig());
-
-    const formSchema = z.object({
-        title: z.string().min(1, { message: "Title is required" }),
-    });
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -48,16 +49,18 @@ const AddBoardContent = ({
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
+            const boardApi = new BoardsApi(getConfig());
             const response = await boardApi.createBoardBoardsPost({
                 boardInCreate: {
                     title: values.title,
                 },
             });
-            setBoards((prevBoards) => [...prevBoards, response]);
+            setBoards((prevBoards) => (prevBoards ? [...prevBoards, response] : null));
         } catch (error) {
             console.error("Error creating board:", error);
+        } finally {
+            setOpen(false);
         }
-        setOpen(false);
     };
 
     return (
@@ -76,7 +79,7 @@ const AddBoardContent = ({
                             <FormLabel>Board Title</FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Enter board title..."
+                                    placeholder="Project Name or Goal..."
                                     {...field}
                                     className="w-full"
                                 />
@@ -103,7 +106,7 @@ export const BoardsDialog = ({
     children: React.ReactNode;
     open: boolean;
     setOpen: (open: boolean) => void;
-    setBoards: React.Dispatch<React.SetStateAction<BoardOut[]>>;
+    setBoards: React.Dispatch<React.SetStateAction<BoardOut[] | null>>;
 }) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>

@@ -6,11 +6,6 @@ import { useRouter } from "next/navigation";
 import { getToken } from "@/auth/utils";
 import { Spinner } from "@/components/ui/spinner";
 
-// TODO
-// - add signup link
-// - shows when email or password is invalid
-// - add wait component when waiting for useeffect
-
 export default function Page() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
@@ -20,9 +15,10 @@ export default function Page() {
         const token = getToken();
         if (token) {
             router.push("/boards");
+        } else {
+            setIsLoading(false);
         }
-        setIsLoading(false);
-    }, []);
+    }, [router]);
 
     if (isLoading)
         return (

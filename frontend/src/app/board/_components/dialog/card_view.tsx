@@ -70,7 +70,7 @@ const Title = ({ form }: { form: any }) => {
         );
     }
     return (
-        <div className="text-2xl font-bold" onClick={() => setIsTitleEditable(true)}>
+        <div className="text-lg font-bold" onClick={() => setIsTitleEditable(true)}>
             {form.watch("title")}
         </div>
     );
@@ -114,7 +114,7 @@ const Description = ({ form }: { form: any }) => {
                 onClick={() => setIsDescriptionEditable(true)}
                 className="flex flex-col gap-2 border rounded-md p-2"
             >
-                <ScrollArea className="h-96">
+                <ScrollArea className="h-64">
                     <MarkdownRenderer content={form.watch("description")} />
                 </ScrollArea>
             </div>
@@ -236,7 +236,7 @@ export const ViewDialog = ({
     setOpen,
 }: {
     metadata: CardView;
-    setData: Dispatch<SetStateAction<Data>>;
+    setData: Dispatch<SetStateAction<Data | null>>;
     setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
     const { toast } = useToast();
@@ -285,10 +285,15 @@ export const ViewDialog = ({
             labels: patch.labels ?? metadata.card.labels,
         };
 
-        setData((prevData: Data) => ({
-            ...prevData,
-            cards: prevData.cards.map((card) => (card.id === metadata.card.id ? newCard : card)),
-        }));
+        setData(
+            (prev) =>
+                prev && {
+                    ...prev,
+                    cards: prev.cards.map((card) =>
+                        card.id === metadata.card.id ? newCard : card
+                    ),
+                }
+        );
 
         // Check if all fields are undefined
         if (Object.values(patch).every((value) => value === undefined)) {
@@ -301,12 +306,15 @@ export const ViewDialog = ({
                 cardId: metadata.card.id,
                 cardInUpdate: patch,
             });
-            setData((prevData: Data) => ({
-                ...prevData,
-                cards: prevData.cards.map((card) =>
-                    card.id === metadata.card.id ? response : card
-                ),
-            }));
+            setData(
+                (prev) =>
+                    prev && {
+                        ...prev,
+                        cards: prev.cards.map((card) =>
+                            card.id === metadata.card.id ? response : card
+                        ),
+                    }
+            );
             toast({
                 title: "Card updated",
                 description: "Card updated successfully",
@@ -329,10 +337,13 @@ export const ViewDialog = ({
                 cardId: metadata.card.id,
             });
 
-            setData((prevData: Data) => ({
-                ...prevData,
-                cards: prevData.cards.filter((card) => card.id !== metadata.card.id),
-            }));
+            setData(
+                (prev) =>
+                    prev && {
+                        ...prev,
+                        cards: prev.cards.filter((card) => card.id !== metadata.card.id),
+                    }
+            );
 
             toast({
                 title: "Card deleted",

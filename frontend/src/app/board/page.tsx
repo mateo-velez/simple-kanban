@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useCallback } from "react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -14,47 +14,29 @@ import { Spinner } from "@/components/ui/spinner";
 import { Data, Metadata } from "./_components/interfaces";
 
 import { useToast } from "@/hooks/use-toast";
+import { Configuration } from "@/api-client/runtime";
+import { useAuthClient } from "@/hooks/use-auth-client";
 
 function BoardContent() {
-    const boardApi = new BoardsApi(getConfig());
     const searchParams = useSearchParams();
     const boardId = parseInt(searchParams.get("board_id") || "0");
-    const router = useRouter();
-    const { toast } = useToast();
-    const [data, setData] = useState<Data>({
-        board: {
-            id: 0,
-            title: "",
-            labels: [],
-            description: "",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        },
-        cards: [],
-    });
+
     const [open, setOpen] = useState(false);
     const [metadata, setMetadata] = useState<Metadata>({ type: "default" });
 
-    async function fetchData(boardId: number, boardApi: BoardsApi) {
-        try {
+    const fetchData = useCallback(
+        async (config: Configuration) => {
+            const boardsApi = new BoardsApi(config);
             const [board, cards] = await Promise.all([
-                boardApi.getBoardBoardsBoardIdGet({ boardId: boardId }),
-                boardApi.listCardsBoardsBoardIdCardsGet({ boardId: boardId }),
+                boardsApi.getBoardBoardsBoardIdGet({ boardId: boardId }),
+                boardsApi.listCardsBoardsBoardIdCardsGet({ boardId: boardId }),
             ]);
-            setData({ board, cards });
-        } catch (error) {
-            router.push("/");
-            toast({
-                title: "Board not found",
-                description: "The board you are trying to access does not exist.",
-                variant: "destructive",
-            });
-        }
-    }
+            return { board, cards };
+        },
+        [boardId]
+    );
 
-    useEffect(() => {
-        fetchData(boardId, boardApi);
-    }, []);
+    const { data, setData } = useAuthClient<Data>(fetchData);
 
     if (!data)
         return (
@@ -62,17 +44,18 @@ function BoardContent() {
                 <Spinner />
             </div>
         );
-
-    return (
-        <DialogRoot open={open} setOpen={setOpen} metadata={metadata} setData={setData}>
-            <div className="h-full w-full flex flex-col">
-                <Header board={data.board} setMetadata={setMetadata} setOpen={setOpen} />
-                <div className="h-full bg-background">
-                    <RezizableBoard data={data} setMetadata={setMetadata} />
+    else {
+        return (
+            <DialogRoot open={open} setOpen={setOpen} metadata={metadata} setData={setData}>
+                <div className="h-full w-full flex flex-col">
+                    <Header board={data.board} setMetadata={setMetadata} setOpen={setOpen} />
+                    <div className="h-full bg-background">
+                        <RezizableBoard data={data} setMetadata={setMetadata} />
+                    </div>
                 </div>
-            </div>
-        </DialogRoot>
-    );
+            </DialogRoot>
+        );
+    }
 }
 
 export default function BoardPage() {
