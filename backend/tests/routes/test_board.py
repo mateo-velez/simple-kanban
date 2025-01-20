@@ -157,3 +157,22 @@ def test_share_board(client: TestClient, auth_client: TestClient, board: dict):
     # test that the user cannot see the board
     response = client.get(f"/boards/{board['id']}", headers=headers)
     assert response.status_code == 404
+
+
+def test_list_users(auth_client: TestClient, board: dict):
+    response = auth_client.get(f"/boards/{board['id']}/users")
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
+    # create account
+    account, headers = get_random_accont_credentials(auth_client)
+
+    # share board
+    response = auth_client.put(f"/boards/{board['id']}/users/{account['id']}")
+    assert response.status_code == 200
+
+    # list users
+    response = auth_client.get(f"/boards/{board['id']}/users")
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert account["id"] in [user["id"] for user in response.json()]

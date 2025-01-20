@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from kanban_api.schemas.user import UserOutPublic
 from sqlalchemy import insert, select
 from sqlalchemy.orm import Session
 
@@ -98,3 +99,8 @@ def unshare_board(
         db.commit()
     else:
         raise HTTPException(status_code=404, detail="User board association not found")
+
+
+@router.get("/{board_id}/users", status_code=200)
+def list_users(board: Board = Depends(get_board)) -> list[UserOutPublic]:
+    return board.owners  # type: ignore
