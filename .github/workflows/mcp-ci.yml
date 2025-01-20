@@ -25,3 +25,5 @@ jobs:
 
         env:
           API_BASE_URL: "not_important"
+          MCP_USERNAME: "not_important"
+          MCP_PASSWORD: "not_important"

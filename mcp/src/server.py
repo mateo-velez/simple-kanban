@@ -1,4 +1,5 @@
 import asyncio
+import time
 from mcp.server.fastmcp import FastMCP
 from src.client.models import (
     Token,
@@ -33,41 +34,37 @@ import os
 mcp = FastMCP()
 
 
-def get_api_config() -> APIConfig:
-    if not os.path.exists(config.token_path):
-        raise FileNotFoundError(f"Token file not found: {config.token_path}")
+async def get_api_config() -> APIConfig:
+    api_config = APIConfig(base_path=config.api_base_url)
+
+    # or token older than 1 hour
+    if (
+        not os.path.exists(config.token_path)
+        or time.time() - os.path.getmtime(config.token_path) > 3600
+    ):
+
+        response = await login_auth_tokens_post(
+            data=Body_login_auth_tokens_post(
+                grant_type="password",
+                username=config.mcp_username,
+                password=config.mcp_password,
+            ),
+            api_config_override=api_config,
+        )
+        with open(config.token_path, "w") as file:
+            json.dump(response.model_dump(), file)
 
     with open(config.token_path, "r") as file:
         token = json.load(file)
 
-    api_config = APIConfig(base_path=config.api_base_url)
     api_config.set_access_token(token["access_token"])
     return api_config
 
 
 @mcp.tool()
-async def login(username: str, password: str):
-    """Login with username and password to get authentication token."""
-    api_config = APIConfig(base_path=config.api_base_url)
-    response: Token = await login_auth_tokens_post(
-        data=Body_login_auth_tokens_post(
-            grant_type="password",
-            username=username,
-            password=password,
-            client_id="string",
-            client_secret="string",
-        ),
-        api_config_override=api_config,
-    )
-    print(response)
-    with open(config.token_path, "w") as file:
-        json.dump(response.dict(), file)
-
-
-@mcp.tool()
 async def list_boards():
     """Get list of all boards."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     response: list[BoardOut] = await list_boards_boards_get(
         api_config_override=api_config
     )
@@ -77,7 +74,7 @@ async def list_boards():
 @mcp.tool()
 async def get_board(board_id: int):
     """Get a board and its cards by ID."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     board_out: BoardOut = await get_board_boards__board_id__get(
         board_id=board_id,
         api_config_override=api_config,
@@ -93,7 +90,7 @@ async def get_board(board_id: int):
 @mcp.tool()
 async def create_board(board_in_create: BoardInCreate):
     """Create a new board."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     response: BoardOut = await create_board_boards_post(
         data=board_in_create,
         api_config_override=api_config,
@@ -104,7 +101,7 @@ async def create_board(board_in_create: BoardInCreate):
 @mcp.tool()
 async def update_board(board_id: int, board_in_update: BoardInUpdate):
     """Update a board by its ID."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     response: BoardOut = await update_board_boards__board_id__patch(
         board_id=board_id,
         data=board_in_update,
@@ -116,7 +113,7 @@ async def update_board(board_id: int, board_in_update: BoardInUpdate):
 @mcp.tool()
 async def delete_board(board_id: int):
     """Delete a board by its ID."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     await delete_board_boards__board_id__delete(
         board_id=board_id,
         api_config_override=api_config,
@@ -126,7 +123,7 @@ async def delete_board(board_id: int):
 @mcp.tool()
 async def create_cards(board_id: int, cards_in_create: list[CardInCreate]):
     """Create a new card in the specified board."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     response: list[CardOut] = await create_cards_boards__board_id__cards_post(
         board_id=board_id,
         data=cards_in_create,
@@ -138,7 +135,7 @@ async def create_cards(board_id: int, cards_in_create: list[CardInCreate]):
 @mcp.tool()
 async def get_cards(card_ids: list[int]):
     """Get a card by its ID."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     responses: list[CardOut] = await asyncio.gather(
         *(
             get_card_cards__card_id__get(
@@ -154,7 +151,7 @@ async def get_cards(card_ids: list[int]):
 @mcp.tool()
 async def update_cards(card_id: int, cards_in_update: list[CardInUpdate]):
     """Update a card by its ID."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     responses: list[CardOut] = await asyncio.gather(
         *(
             update_card_cards__card_id__patch(
@@ -171,7 +168,7 @@ async def update_cards(card_id: int, cards_in_update: list[CardInUpdate]):
 @mcp.tool()
 async def delete_cards(card_ids: list[int]):
     """Delete a card by its ID."""
-    api_config = get_api_config()
+    api_config = await get_api_config()
     await asyncio.gather(
         *(
             delete_card_cards__card_id__delete(

@@ -21,6 +21,7 @@ services:
       SECRET_KEY: e022b6e22b2f42ae5e1d77194a0aac4ff16e47090ac2fd15e15926e3761c2773
       ALGORITHM: HS256
       DB_URL: postgresql://admin:admin@db:5432/kanban
+      POPULATE_DB: TRUE
     ports:
       - "8000:8000"
     depends_on:
