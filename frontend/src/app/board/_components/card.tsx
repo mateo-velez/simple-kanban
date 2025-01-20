@@ -17,7 +17,7 @@ export function AddCard({
     className?: string;
 }) {
     const classNames = cn(
-        "p-4 rounded-lg border bg-background items-center justify-center flex hover:bg-accent transition-colors duration-200 cursor-pointer",
+        "p-4 rounded-lg border border-dashed bg-background items-center justify-center flex hover:bg-accent/50 transition-all duration-200 cursor-pointer",
         className
     );
     return (
@@ -48,7 +48,7 @@ export function DisplayCard({
     N?: number;
 }) {
     const classNames = cn(
-        "flex flex-col gap-1 p-1.5 rounded-lg border bg-background hover:bg-accent transition-colors duration-200 cursor-pointer",
+        "flex flex-col gap-2 p-3 rounded-lg border bg-background hover:bg-accent/50 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md",
         className
     );
     return (
@@ -59,17 +59,16 @@ export function DisplayCard({
                 }}
                 className={classNames}
             >
-                <div className="h-2 flex gap-2 -mb-0.5">
+                <div className="flex gap-1.5">
                     {card.labels.map((color) => (
                         <div
                             key={color}
-                            className={`w-4 h-2 rounded-full`}
+                            className={`w-2.5 h-2.5 rounded-full ring-1 ring-black/5`}
                             style={{ backgroundColor: color }}
                         />
                     ))}
                 </div>
-                {/* limit card tittle to N characters ending with ... */}
-                <h3 className="font-normal text-sm text-foreground">
+                <h3 className="font-semibold text-base tracking-tight leading-snug text-foreground/80 line-clamp-2 antialiased">
                     {card.title.length > N ? card.title.slice(0, N) + "..." : card.title}
                 </h3>
             </div>

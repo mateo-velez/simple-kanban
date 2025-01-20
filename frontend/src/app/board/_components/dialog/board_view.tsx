@@ -52,7 +52,7 @@ const Title = ({ form }: { form: any }) => {
     if (isTitleEditable) {
         return (
             <Input
-                className="font-bold"
+                className="text-lg font-bold tracking-tight"
                 {...form.register("title")}
                 onBlur={(e) => handleBlur(e.target.value)}
                 autoFocus
@@ -60,7 +60,10 @@ const Title = ({ form }: { form: any }) => {
         );
     }
     return (
-        <div className="text-lg font-bold" onClick={() => setIsTitleEditable(true)}>
+        <div
+            className="text-lg font-bold tracking-tight hover:text-primary/80 cursor-pointer transition-colors"
+            onClick={() => setIsTitleEditable(true)}
+        >
             {form.watch("title")}
         </div>
     );
@@ -77,17 +80,18 @@ const Description = ({ form }: { form: any }) => {
     if (isDescriptionEditable) {
         return (
             <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-muted-foreground">
                     <SquarePen className="w-4 h-4" />
                     <span className="font-bold text-md">Description</span>
                 </div>
                 <div className="flex flex-col gap-2">
                     <ScrollArea className="h-full">
                         <Textarea
-                            className="h-64"
+                            className="h-64 resize-none"
                             {...form.register("description")}
                             onBlur={(e) => handleBlur(e.target.value)}
                             autoFocus
+                            placeholder="Add a more detailed description..."
                         />
                     </ScrollArea>
                 </div>
@@ -96,16 +100,22 @@ const Description = ({ form }: { form: any }) => {
     }
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
                 <SquarePen className="w-4 h-4" />
                 <span className="font-bold">Description</span>
             </div>
             <div
                 onClick={() => setIsDescriptionEditable(true)}
-                className="flex flex-col gap-2 border rounded-md p-2"
+                className="flex flex-col gap-2 border rounded-md p-3 min-h-[8rem] hover:bg-accent/50 cursor-pointer transition-colors"
             >
                 <ScrollArea className="h-64">
-                    <MarkdownRenderer content={form.watch("description")} />
+                    {form.watch("description") ? (
+                        <MarkdownRenderer content={form.watch("description")} />
+                    ) : (
+                        <span className="text-muted-foreground italic">
+                            Add a more detailed description...
+                        </span>
+                    )}
                 </ScrollArea>
             </div>
         </div>
@@ -148,8 +158,8 @@ const Label = ({ label, form, index }: { label: LabelOut; form: any; index: numb
 
 const Labels = ({ form }: { form: any }) => {
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 text-muted-foreground">
                 <span className="text-md font-bold">Labels</span>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -253,7 +263,7 @@ export const ViewBoardDialog = ({
     };
 
     return (
-        <DialogContent className="w-full max-w-2xl max-h-screen">
+        <DialogContent className="w-full max-w-2xl max-h-screen overflow-hidden">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <DialogHeader>
@@ -261,13 +271,20 @@ export const ViewBoardDialog = ({
                             <Title form={form} />
                         </DialogTitle>
                     </DialogHeader>
-                    <div className="h-fit md:w-auto flex flex-col gap-2">
+                    <div className="h-fit md:w-auto flex flex-col gap-4">
                         <Description form={form} />
                         <Labels form={form} />
                     </div>
-                    <DialogFooter>
-                        <Button type="submit">Save Changes</Button>
-                        <Button type="button" variant="destructive" onClick={handleDelete}>
+                    <DialogFooter className="gap-2">
+                        <Button type="submit" className="font-medium">
+                            Save Changes
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={handleDelete}
+                            className="bg-destructive/90 hover:bg-destructive"
+                        >
                             <Trash2Icon className="w-4 h-4" />
                         </Button>
                     </DialogFooter>
