@@ -62,7 +62,7 @@ const Title = ({ form }: { form: any }) => {
     if (isTitleEditable) {
         return (
             <Input
-                className="font-bold"
+                className="font-bold text-lg"
                 {...form.register("title")}
                 onBlur={(e) => handleBlur(e.target.value)}
                 autoFocus
@@ -70,7 +70,10 @@ const Title = ({ form }: { form: any }) => {
         );
     }
     return (
-        <div className="text-lg font-bold" onClick={() => setIsTitleEditable(true)}>
+        <div
+            className="text-lg font-bold cursor-pointer hover:text-primary/80 transition-colors"
+            onClick={() => setIsTitleEditable(true)}
+        >
             {form.watch("title")}
         </div>
     );
@@ -94,10 +97,11 @@ const Description = ({ form }: { form: any }) => {
                 <div className="flex flex-col gap-2">
                     <ScrollArea className="h-full">
                         <Textarea
-                            className="h-96"
+                            className="min-h-[300px] resize-none"
                             {...form.register("description")}
                             onBlur={(e) => handleBlur(e.target.value)}
                             autoFocus
+                            placeholder="Add a more detailed description..."
                         />
                     </ScrollArea>
                 </div>
@@ -112,17 +116,20 @@ const Description = ({ form }: { form: any }) => {
             </div>
             <div
                 onClick={() => setIsDescriptionEditable(true)}
-                className="flex flex-col gap-2 border rounded-md p-2"
+                className="flex flex-col gap-2 border rounded-md p-4 min-h-[200px] cursor-pointer hover:bg-accent/50 transition-colors"
             >
-                <ScrollArea className="h-64">
-                    <MarkdownRenderer content={form.watch("description")} />
+                <ScrollArea className="h-full">
+                    {form.watch("description") ? (
+                        <MarkdownRenderer content={form.watch("description")} />
+                    ) : (
+                        <span className="text-gray-400">Add a more detailed description...</span>
+                    )}
                 </ScrollArea>
             </div>
         </div>
     );
 };
 
-// Start of Selection
 const Labels = ({ form, labels }: { form: any; labels: LabelOut[] }) => {
     const sortedLabels = labels.sort((a, b) => a.color.localeCompare(b.color));
 
@@ -138,27 +145,27 @@ const Labels = ({ form, labels }: { form: any; labels: LabelOut[] }) => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
-                <div className="flex items-center gap-1 p-2">
+            <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-1">
                     {currentLabels.map((labelColor) => {
                         const label = labels.find((l) => l.color === labelColor);
                         return label ? (
                             <div
                                 key={label.color}
-                                className="w-5 h-5 rounded-sm"
+                                className="w-3.5 h-3.5 rounded-full"
                                 style={{ backgroundColor: label.color }}
                             />
                         ) : null;
                     })}
-                    <div className="border rounded-sm flex items-center justify-center">
-                        <Plus className="w-5 h-5" />
-                    </div>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                        <Plus className="h-4 w-4" />
+                    </Button>
                 </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <div className="flex flex-col gap-1 p-2">
-                    {sortedLabels.map((opt) => (
-                        <div key={opt.color} className="flex items-center gap-2">
+            <DropdownMenuContent align="start" className="w-[200px] p-2">
+                {sortedLabels.map((opt) => (
+                    <div key={opt.color} className="flex items-center gap-2 py-1">
+                        <div className="flex-none">
                             <Checkbox
                                 id={opt.color}
                                 checked={currentLabels.includes(opt.color)}
@@ -166,16 +173,18 @@ const Labels = ({ form, labels }: { form: any; labels: LabelOut[] }) => {
                                     handleLabelChange(opt.color, checked as boolean)
                                 }
                             />
-                            <label
-                                htmlFor={opt.color}
-                                className="flex items-center justify-center gap-2 font-bold text-black text-sm cursor-pointer w-full rounded-full"
-                                style={{ backgroundColor: opt.color }}
-                            >
-                                {opt.name || "-"}
-                            </label>
                         </div>
-                    ))}
-                </div>
+                        <div
+                            className="flex-1 h-7 rounded flex items-center justify-center px-2 cursor-pointer"
+                            style={{ backgroundColor: opt.color }}
+                            onClick={() =>
+                                handleLabelChange(opt.color, !currentLabels.includes(opt.color))
+                            }
+                        >
+                            <span className="text-sm font-bold text-black">{opt.name || "-"}</span>
+                        </div>
+                    </div>
+                ))}
             </DropdownMenuContent>
         </DropdownMenu>
     );
@@ -215,20 +224,6 @@ const Column = ({ form }: { form: any }) => {
         </Select>
     );
 };
-
-// const Form = ({ metadata, children }: { metadata: CardView; children: React.ReactNode }) => {
-//     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-//         console.log(values);
-//     };
-
-//     return (
-//         <Form {...form} key={metadata.card.id}>
-//             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-//                 {children}
-//             </form>
-//         </Form>
-//     );
-// };
 
 export const ViewDialog = ({
     metadata,
@@ -360,7 +355,7 @@ export const ViewDialog = ({
     };
 
     return (
-        <DialogContent>
+        <DialogContent className="w-full max-w-2xl max-h-screen overflow-hidden">
             <Form {...form} key={metadata.card.id}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <DialogHeader>
@@ -368,16 +363,23 @@ export const ViewDialog = ({
                             <Title form={form} />
                         </DialogTitle>
                     </DialogHeader>
-                    <div className="h-fit md:w-autoflex flex-col gap-2">
-                        <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-4 flex-wrap">
                             <Labels form={form} labels={metadata.board.labels} />
                             <Column form={form} />
                         </div>
                         <Description form={form} />
                     </div>
-                    <DialogFooter>
-                        <Button type="submit">Save Changes</Button>
-                        <Button type="button" variant="destructive" onClick={handleDelete}>
+                    <DialogFooter className="gap-2">
+                        <Button type="submit" className="font-medium">
+                            Save Changes
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={handleDelete}
+                            className="bg-destructive/90 hover:bg-destructive"
+                        >
                             <Trash2Icon className="w-4 h-4" />
                         </Button>
                     </DialogFooter>

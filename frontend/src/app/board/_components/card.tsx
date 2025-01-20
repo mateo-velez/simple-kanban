@@ -63,7 +63,7 @@ export function DisplayCard({
                     {card.labels.sort().map((color) => (
                         <div
                             key={color}
-                            className={`w-2.5 h-2.5 rounded-full ring-1 ring-black/5`}
+                            className={`w-3 h-3 rounded-full ring-1 ring-black/5`}
                             style={{ backgroundColor: color }}
                         />
                     ))}
