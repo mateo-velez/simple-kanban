@@ -55,6 +55,10 @@ const AddBoardContent = ({
                     title: values.title,
                 },
             });
+            toast({
+                title: "Board created",
+                description: "Board created succesfully",
+            });
             setBoards((prevBoards) => (prevBoards ? [...prevBoards, response] : null));
         } catch (error) {
             console.error("Error creating board:", error);

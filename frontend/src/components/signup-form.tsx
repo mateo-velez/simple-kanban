@@ -22,14 +22,20 @@ import { getConfig } from "@/auth/utils";
 import { useState } from "react";
 import { Spinner } from "./ui/spinner";
 
-const formSchema = z.object({
-    email: z.string().email({
-        message: "Please enter a valid email address.",
-    }),
-    password: z.string().min(8, {
-        message: "Password must be at least 8 characters.",
-    }),
-});
+const formSchema = z
+    .object({
+        email: z.string().email({
+            message: "Please enter a valid email address.",
+        }),
+        password: z.string().min(8, {
+            message: "Password must be at least 8 characters.",
+        }),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords do not match",
+        path: ["confirmPassword"],
+    });
 
 const successTimeout = 3000;
 
@@ -39,6 +45,7 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
         defaultValues: {
             email: "",
             password: "",
+            confirmPassword: "",
         },
     });
 
@@ -131,7 +138,32 @@ export function SignupForm({ className, ...props }: React.ComponentPropsWithoutR
                                         <FormItem>
                                             <FormLabel htmlFor="password">Password</FormLabel>
                                             <FormControl>
-                                                <Input {...field} type="password" required />
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    placeholder="Enter password"
+                                                    required
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="confirmPassword"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="confirmPassword">
+                                                Confirm Password
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type="password"
+                                                    placeholder="Confirm password"
+                                                    required
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
