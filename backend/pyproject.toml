@@ -28,6 +28,7 @@ dependencies = [
     "sqlalchemy[asyncio]",
     "asyncpg",
     "python-multipart",
+    "faker",
 ]
 
 [project.optional-dependencies]
@@ -38,7 +39,6 @@ dev = [
     "black",
     "isort",
     "flake8",
-    "faker",
     "flake8-pyproject",
 ]
 
