@@ -15,7 +15,6 @@ export default function HomePage() {
     }, []);
 
     const { data: boards, setData: setBoards } = useAuthClient(fetchBoards);
-
     const [open, setOpen] = useState(false);
 
     if (boards === null)
@@ -27,15 +26,17 @@ export default function HomePage() {
 
     return (
         <BoardsDialog open={open} setOpen={setOpen} setBoards={setBoards}>
-            <div className="h-full w-full p-4">
-                <div className="flex flex-wrap gap-4">
+            <div className="h-full w-full p-6 bg-gradient-to-b from-background to-background/50">
+                <div className="mb-6">
+                    <h1 className="text-2xl font-semibold">Your Boards</h1>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        Create and manage your Kanban boards
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <AddBoard />
                     {boards.map((board) => (
-                        <Board
-                            key={board.id}
-                            board={board}
-                            className="border border-gray-300 rounded-md p-4"
-                        />
+                        <Board key={board.id} board={board} />
                     ))}
                 </div>
             </div>

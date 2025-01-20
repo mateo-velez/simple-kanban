@@ -15,7 +15,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { UsersApi } from "@/api-client/apis/UsersApi";
 import { getConfig } from "@/auth/utils";
 
@@ -44,7 +43,6 @@ const formSchema = z
 
 export const AccountForm = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -65,16 +63,10 @@ export const AccountForm = () => {
                     password: values.newPassword || undefined,
                 },
             });
-            toast({
-                title: "Account updated",
-                description: "Your account has been updated successfully",
-            });
             form.reset();
         } catch (error) {
-            toast({
-                title: "Update failed",
-                description: "Failed to update account. Please try again.",
-                variant: "destructive",
+            form.setError("root", {
+                message: "Failed to update account. Please try again.",
             });
         } finally {
             setIsLoading(false);
@@ -84,6 +76,11 @@ export const AccountForm = () => {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {form.formState.errors.root && (
+                    <FormMessage className="text-red-500">
+                        {form.formState.errors.root.message}
+                    </FormMessage>
+                )}
                 <div className="space-y-4">
                     <FormField
                         control={form.control}
