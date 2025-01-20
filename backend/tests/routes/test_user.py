@@ -3,7 +3,6 @@ from pytest import fixture
 
 from tests.conftest import auth_client, client, fake, get_random_accont_credentials
 
-
 # test creat user status code and correct output
 # test create user existing email
 

@@ -1,10 +1,6 @@
 name: MCP CI
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "mcp/**"
   pull_request:
     branches: [main]
     paths:
