@@ -87,12 +87,12 @@ export const AddCardForm = ({
     };
 
     return (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px]">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <DialogHeader>
-                        <DialogTitle>Add New Card</DialogTitle>
-                        <DialogDescription>
+                        <DialogTitle className="text-xl">Add New Card</DialogTitle>
+                        <DialogDescription className="text-gray-500">
                             Create a new card by entering a title below.
                         </DialogDescription>
                     </DialogHeader>
@@ -102,21 +102,27 @@ export const AddCardForm = ({
                         name="title"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Card Title</FormLabel>
+                                <FormLabel className="text-sm font-medium">Card Title</FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="Enter card title..."
                                         {...field}
-                                        className="w-full"
+                                        className="w-full focus-visible:ring-black"
+                                        autoFocus
                                     />
                                 </FormControl>
+                                <FormDescription className="text-xs text-gray-500">
+                                    Give your card a clear and descriptive title.
+                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
                     <DialogFooter>
-                        <Button type="submit">Create Card</Button>
+                        <Button type="submit" className="bg-black hover:bg-gray-800">
+                            Create Card
+                        </Button>
                     </DialogFooter>
                 </form>
             </Form>
