@@ -165,7 +165,7 @@ const Labels = ({ form }: { form: any }) => {
             <div className="flex flex-wrap gap-2">
                 {form
                     .watch("labels")
-                    .sort((a, b) => a.color > b.color)
+                    .sort((a: LabelOut, b: LabelOut) => a.color > b.color)
                     .map((label: LabelOut, index: number) => (
                         <Label key={label.color} label={label} form={form} index={index} />
                     ))}
