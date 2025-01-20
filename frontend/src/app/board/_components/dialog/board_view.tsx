@@ -163,9 +163,12 @@ const Labels = ({ form }: { form: any }) => {
                 <span className="text-md font-bold">Labels</span>
             </div>
             <div className="flex flex-wrap gap-2">
-                {form.watch("labels").map((label: LabelOut, index: number) => (
-                    <Label key={label.color} label={label} form={form} index={index} />
-                ))}
+                {form
+                    .watch("labels")
+                    .sort((a, b) => a.color > b.color)
+                    .map((label: LabelOut, index: number) => (
+                        <Label key={label.color} label={label} form={form} index={index} />
+                    ))}
             </div>
         </div>
     );

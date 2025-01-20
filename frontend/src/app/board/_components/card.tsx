@@ -60,7 +60,7 @@ export function DisplayCard({
                 className={classNames}
             >
                 <div className="flex gap-1.5">
-                    {card.labels.map((color) => (
+                    {card.labels.sort().map((color) => (
                         <div
                             key={color}
                             className={`w-2.5 h-2.5 rounded-full ring-1 ring-black/5`}

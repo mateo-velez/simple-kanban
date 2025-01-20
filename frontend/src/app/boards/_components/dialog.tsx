@@ -25,7 +25,6 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
     title: z.string().min(1, { message: "Title is required" }),
@@ -38,8 +37,6 @@ const AddBoardContent = ({
     setOpen: (open: boolean) => void;
     setBoards: React.Dispatch<React.SetStateAction<BoardOut[] | null>>;
 }) => {
-    const { toast } = useToast();
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -54,10 +51,6 @@ const AddBoardContent = ({
                 boardInCreate: {
                     title: values.title,
                 },
-            });
-            toast({
-                title: "Board created",
-                description: "Board created succesfully",
             });
             setBoards((prevBoards) => (prevBoards ? [...prevBoards, response] : null));
         } catch (error) {
