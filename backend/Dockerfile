@@ -31,6 +31,7 @@ RUN pip install --no-cache-dir ".[dev]"
 # Copy actual source and test files
 COPY src/ src/
 COPY tests/ tests/
+RUN mkdir -p static
 
 CMD ["pytest"]
 

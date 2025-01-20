@@ -26,3 +26,6 @@ jobs:
         run: |
           pip install .
           python -c "from src.server import *"
+
+        env:
+          API_BASE_URL: "not_important"
