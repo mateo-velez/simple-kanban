@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kanban_api"
+version = "0.1.0"
+authors = [
+  { name="Mateo Velez", email="mateo.velez@gmail.com" },
+]
+description = "A simple kanban API"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlalchemy",
+    "pydantic",
+    "pydantic[email]",
+    "pyjwt",
+    "pydantic-settings",
+    "passlib[bcrypt]",
+    "psycopg2-binary",
+    "sqlalchemy[asyncio]",
+    "asyncpg",
+    "python-multipart",
+]
+
+[project.optional-dependencies]
+dev = [
+    "fastapi[standard]",
+    "pytest",
+    "httpx",
+    "black",
+    "isort",
+    "flake8",
+    "faker",
+    "flake8-pyproject",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+preview = true
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    ".venv",
+]
