@@ -57,5 +57,5 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/kanban-backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple-kanban-server:latest
           target: prod
