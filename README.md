@@ -1,6 +1,6 @@
 # Simple Kanban
 
-A modern, full-stack Kanban board application built to demonstrate software engineering best practices.
+A modern, full-stack Kanban board application built to apply software engineering best practices.
 
 ## Overview
 
@@ -87,7 +87,7 @@ npm run dev
 
 - **Backend:**
 
-  - RESTful API with FastAPI and async operations
+  - RESTful API with FastAPI
   - SQLAlchemy ORM with proper relationship modeling
   - Comprehensive API testing with pytest
   - JWT authentication flow
