@@ -7,11 +7,11 @@ from ..api_config import APIConfig, HTTPException
 from ..models import *
 
 
-async def get_card_cards__card_id__get(card_id: int, api_config_override: Optional[APIConfig] = None) -> CardOut:
+async def get_card_api_cards__card_id__get(card_id: int, api_config_override: Optional[APIConfig] = None) -> CardOut:
     api_config = api_config_override if api_config_override else APIConfig()
 
     base_path = api_config.base_path
-    path = f"/cards/{card_id}"
+    path = f"/api/cards/{card_id}"
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -35,11 +35,11 @@ async def get_card_cards__card_id__get(card_id: int, api_config_override: Option
     return CardOut(**response.json()) if response.json() is not None else CardOut()
 
 
-async def delete_card_cards__card_id__delete(card_id: int, api_config_override: Optional[APIConfig] = None) -> None:
+async def delete_card_api_cards__card_id__delete(card_id: int, api_config_override: Optional[APIConfig] = None) -> None:
     api_config = api_config_override if api_config_override else APIConfig()
 
     base_path = api_config.base_path
-    path = f"/cards/{card_id}"
+    path = f"/api/cards/{card_id}"
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -63,13 +63,13 @@ async def delete_card_cards__card_id__delete(card_id: int, api_config_override: 
     return None
 
 
-async def update_card_cards__card_id__patch(
+async def update_card_api_cards__card_id__patch(
     card_id: int, data: CardInUpdate, api_config_override: Optional[APIConfig] = None
 ) -> CardOut:
     api_config = api_config_override if api_config_override else APIConfig()
 
     base_path = api_config.base_path
-    path = f"/cards/{card_id}"
+    path = f"/api/cards/{card_id}"
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
