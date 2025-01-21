@@ -7,11 +7,13 @@ from ..api_config import APIConfig, HTTPException
 from ..models import *
 
 
-def login_auth_tokens_post(data: Body_login_auth_tokens_post, api_config_override: Optional[APIConfig] = None) -> Token:
+def login_api_auth_tokens_post(
+    data: Body_login_api_auth_tokens_post, api_config_override: Optional[APIConfig] = None
+) -> Token:
     api_config = api_config_override if api_config_override else APIConfig()
 
     base_path = api_config.base_path
-    path = f"/auth/tokens"
+    path = f"/api/auth/tokens"
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
