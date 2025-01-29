@@ -14,7 +14,6 @@ from kanban_api.utils.fake_data import FakeData
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
     if settings.drop_all or settings.populate_db:
         Base.metadata.drop_all(bind=engine)
 
