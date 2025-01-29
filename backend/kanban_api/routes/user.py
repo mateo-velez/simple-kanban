@@ -48,7 +48,6 @@ def update_user(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> UserOut:
-
     # if email is being updated, check if it's already taken
     if user_update.email and user_update.email != user.email:
         stmt = select(User).where(User.email == user_update.email)

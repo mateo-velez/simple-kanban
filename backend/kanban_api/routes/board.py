@@ -23,7 +23,6 @@ def create_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> BoardOut:
-
     board = Board(**board_create.model_dump(exclude={"labels"}), owners=[current_user])
     board.labels = [Label(**label.model_dump()) for label in board_create.labels]
     db.add(board)
