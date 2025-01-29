@@ -1,70 +1,48 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "kanban_api"
+[tool.poetry]
+name = "kanban-api"
 version = "0.1.0"
-authors = [
-  { name="Mateo Velez", email="mateo.velez@gmail.com" },
-]
 description = "A simple kanban API"
+authors = ["Mateo Velez <mateo.velezcobian@gmail.com>"]
+license = "MIT License"
 readme = "README.md"
-requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License"
-]
-dependencies = [
-    "fastapi",
-    "uvicorn[standard]",
-    "sqlalchemy",
-    "pydantic",
-    "pydantic[email]",
-    "pyjwt",
-    "pydantic-settings",
-    "passlib[bcrypt]",
-    "psycopg2-binary",
-    "sqlalchemy[asyncio]",
-    "asyncpg",
-    "python-multipart",
-    "faker",
-]
+packages = [{include = "kanban_api"}]
 
-[project.optional-dependencies]
-dev = [
-    "fastapi[standard]",
-    "pytest",
-    "httpx",
-    "black",
-    "isort",
-    "flake8",
-    "flake8-pyproject",
-]
+[tool.poetry.dependencies]
+python = ">=3.10"
+fastapi = "^0.115.7"
+uvicorn = {extras = ["standard"], version = "^0.34.0"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.37"}
+pydantic = {extras = ["email"], version = "^2.10.6"}
+pyjwt = "^2.10.1"
+pydantic-settings = "^2.7.1"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+psycopg2-binary = "^2.9.10"
+asyncpg = "^0.30.0"
+python-multipart = "^0.0.20"
+faker = "^35.0.0"
 
-[tool.pytest.ini_options]
-pythonpath = [
-  "src"
-]
+
+[tool.poetry.group.dev.dependencies]
+fastapi = {extras = ["standard"], version = "^0.115.7"}
+pytest = "^8.3.4"
+httpx = "^0.28.1"
+black = "^24.10.0"
+isort = "^6.0.0"
+flake8 = "^7.1.1"
+flake8-pyproject = "^1.2.3"
+ruff = "^0.9.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 line-length = 100
 target-version = ['py310']
 preview = true
 
-[tool.isort]
-profile = "black"
-line_length = 100
-multi_line_output = 3
-
-[tool.flake8]
-max-line-length = 100
-extend-ignore = ["E203"]
-exclude = [
-    ".git",
-    "__pycache__",
-    "build",
-    "dist",
-    "*.egg-info",
-    ".venv",
-]
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "N", "W", "D"]
+ignore = ["D100", "D101", "D103", "D102", "D107"]
