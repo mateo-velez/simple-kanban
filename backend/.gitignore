@@ -170,5 +170,4 @@ cython_debug/
 *.db
 
 
-static/*
-!static/.gitkeep
+.ruff_cache/
