@@ -65,24 +65,6 @@ Prerequisites:
 - Node.js 18+
 - PostgreSQL 15
 
-1. Backend Setup:
-
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: .\venv\Scripts\activate
-pip install -e .[dev]
-fastapi run src/kanban_api/main.py
-```
-
-2. Frontend Setup:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
 ## Technical Highlights
 
 - **Backend:**
