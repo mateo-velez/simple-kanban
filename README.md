@@ -88,7 +88,3 @@ Prerequisites:
 - Frontend chat integration
 - Board sharing implementation
 - User analytics dashboard
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
