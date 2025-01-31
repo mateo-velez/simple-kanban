@@ -1,6 +1,6 @@
 # Simple Kanban
 
-A showcase full-stack Kanban board application built with modern technologies and best practices, featuring AI integration for task management.
+A showcase full-stack Kanban board application built with modern technologies and best practices, featuring AI integration for task management. [Repo](https://github.com/mateo-velez/simple-kanban)
 
 ## Project Goals
 
