@@ -1,0 +1,16 @@
+---
+description: Specification to generate docs/github pages markdowns
+globs: docs/**.md, docs/*.md
+---
+## About
+- this project repo is a personal project aimed at showcasing skills
+- these docs are intented to communicate my project better.
+- they are firt divided by the main components: backend, frontend, MCP (AI integration code)
+- the intetion is for technical readers to read and understand better my project, and the developer (me)
+
+
+## Style
+- Professional yet Slightly Personal: Use "I" to highlight your contributions and thinking, but maintain a professional and technical focus.
+- Clear and Concise: Recruiters are busy. Get to the point, use clear headings, bullet points, and avoid unnecessary jargon.
+
+- Problem-Solving Focused: Emphasize the challenges you overcame and the solutions you implemented. This is key to demonstrating your technical abilities.

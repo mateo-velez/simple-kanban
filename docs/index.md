@@ -1,8 +1,7 @@
 # Sample title
 
-<!-- github repo link -->
+## Overview
 
-[Github Repo](https://github.com/mateo-velez/simple-kanban)
 
 [Backend](backend.md)
 
