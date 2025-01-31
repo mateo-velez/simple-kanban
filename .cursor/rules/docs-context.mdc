@@ -14,3 +14,8 @@ globs: docs/**.md, docs/*.md
 - Clear and Concise: Recruiters are busy. Get to the point, use clear headings, bullet points, and avoid unnecessary jargon.
 
 - Problem-Solving Focused: Emphasize the challenges you overcame and the solutions you implemented. This is key to demonstrating your technical abilities.
+
+
+## Docs md
+- keep comments untouched, they are my semantical hints
+- Avoid to much jargon and embelishing words. 
