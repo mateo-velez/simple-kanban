@@ -83,8 +83,7 @@ kanban_api/
 
 - API runs on port 8000
 - Swagger docs at `/docs`
-- Set `POPULATE_DB=true` to seed 7 users, 28 boards, 600 cards
+- Set `POPULATE_DB=true` to seed 7 users, 28 boards, 600 cards. Emails: `user[1-7]@example.com`, Passwords: `password`
 - Tests use separate database
-- CORS enabled for all origins in development
 - Static files served from `/static` directory for frontend
 - Supports both SQLite and PostgreSQL
