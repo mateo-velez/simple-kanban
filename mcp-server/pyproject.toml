@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "mcp-server"
+version = "0.1.0"
+description = ""
+authors = ["Mateo Velez <mateo.velezcobian@gmail.com>"]
+readme = "README.md"
+packages = [{include = "mcp_server"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+simple-kanban-api-client = {path = "client"}
+mcp = "^1.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+mcp = {extras = ["cli"], version = "^1.2.1"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
