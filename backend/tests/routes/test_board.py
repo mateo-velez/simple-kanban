@@ -47,7 +47,6 @@ def test_delete_board(auth_client: TestClient, board: dict):
 
 
 def test_update_board(auth_client: TestClient, board: dict):
-
     def froze_labels(labels: list[dict]) -> set:
         return set(tuple(label.items()) for label in labels)
 
@@ -88,7 +87,6 @@ def test_update_board(auth_client: TestClient, board: dict):
 
 
 def test_create_cards(auth_client: TestClient, board: dict):
-
     # single card
     data = [{"title": fake.sentence(), "description": fake.sentence()}]
     response = auth_client.post(f"/boards/{board['id']}/cards", json=data)
@@ -133,7 +131,6 @@ def test_list_cards(auth_client: TestClient, board: dict):
 
 
 def test_share_board(client: TestClient, auth_client: TestClient, board: dict):
-
     # create account
     account, headers = get_random_accont_credentials(client)
 
