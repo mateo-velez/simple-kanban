@@ -1,6 +1,8 @@
+from enum import Enum
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel
+from simple_kanban_api_client.models import LabelColor, CardColumn
 
 
 class BoardCreate(BaseModel):
@@ -10,11 +12,19 @@ class BoardCreate(BaseModel):
     description: str = ""
 
 
+class LabelUpdate(BaseModel):
+    """Input schema for updating a label."""
+
+    color: LabelColor
+    name: Optional[str] = None
+
+
 class BoardUpdate(BaseModel):
     """Input schema for updating a board."""
 
     title: Optional[str] = None
     description: Optional[str] = None
+    labels: List[LabelUpdate] = []
 
 
 class CardCreate(BaseModel):
@@ -22,8 +32,8 @@ class CardCreate(BaseModel):
 
     title: str
     description: str = ""
-    column: str = "BACKLOG"
-    labels: List[str] = []
+    column: CardColumn = CardColumn.BACKLOG
+    labels: List[LabelColor] = []
 
 
 class CardUpdate(BaseModel):
@@ -31,8 +41,8 @@ class CardUpdate(BaseModel):
 
     title: Optional[str] = None
     description: Optional[str] = None
-    column: Optional[str] = None
-    labels: Optional[List[str]] = None
+    column: Optional[CardColumn] = None
+    labels: Optional[List[LabelColor]] = None
 
 
 class CardsCreate(BaseModel):
