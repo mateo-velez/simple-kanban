@@ -4,7 +4,7 @@ import os
 import time
 from typing import Any, Callable, Coroutine, TypeVar
 
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from simple_kanban_api_client import AuthenticatedClient, Client
 from simple_kanban_api_client.api.auth import login_api_auth_tokens_post
 from simple_kanban_api_client.api.boards import (
@@ -89,7 +89,7 @@ async def get_authenticated_client():
     )
 
 
-mcp = FastMCP()
+mcp = FastMCP(port=8080)
 
 
 @mcp.tool()
@@ -112,7 +112,7 @@ async def list_boards():
 
 
 @mcp.tool()
-async def get_board(board_id: int, include_cards: bool = True):
+async def get_board(board_id: int, include_cards: bool = False):
     """Get a board and its cards by ID."""
     client = await get_authenticated_client()
 
@@ -291,4 +291,4 @@ async def delete_cards(card_ids: list[int]):
 
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="stdio")

@@ -7,7 +7,11 @@ class Config(BaseSettings):
     kanban_username: str
     kanban_password: str
 
-    model_config = {"env_file": ".env"}
+    model_config = {
+        "env_file": ".env",
+        "env_prefix": "MCP_",
+        "case_sensitive": False,
+    }
 
 
 config = Config()  # type: ignore
