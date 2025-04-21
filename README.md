@@ -62,7 +62,7 @@ Access the application:
 Prerequisites:
 
 - Python 3.10+
-- Node.js 18+
+- Next.js 18+
 - PostgreSQL 15
 
 ## Technical Highlights
